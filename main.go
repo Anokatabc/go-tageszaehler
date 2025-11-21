@@ -60,21 +60,21 @@ func main() {
 			leftFive := r.FormValue("leftFive")
 			rightFive := r.FormValue("rightFive")
 			timeResult, timeResultt, errTwo := calculateHours(leftOne, rightOne)
-			timeResultTwo, timeResulttTwo, errTwo := calculateHours(leftTwo, rightTwo)
-			timeResultThree, timeResulttTwo, errTwo := calculateHours(leftThree, rightThree)
-			timeResultFour, timeResulttTwo, errTwo := calculateHours(leftFour, rightFour)
-			timeResultFive, timeResulttTwo, errTwo := calculateHours(leftFive, rightFive)
-			if errTwo != nil {
+			timeResultTwo, timeResulttTwo, errThree := calculateHours(leftTwo, rightTwo)
+			timeResultThree, timeResulttThree, errFour := calculateHours(leftThree, rightThree)
+			timeResultFour, timeResulttFour, errFive := calculateHours(leftFour, rightFour)
+			timeResultFive, timeResulttFive, errSix := calculateHours(leftFive, rightFive)
+			if (errTwo != nil)||(errThree != nil)||(errFour != nil)||(errFive != nil)||(errSix != nil) {
 				fmt.Errorf("Error calculateHours")
 			}
 
         // Ergebnis an Browser senden
         fmt.Fprintf(w, "<h1><ul>Tag 1</ul></h1><p>%v Stunden, %v Minuten</p>", timeResult, timeResultt)
         fmt.Fprintf(w, "<h1><ul>Tag 2</ul></h1><p>%v Stunden, %v Minuten</p>", timeResultTwo, timeResulttTwo)
-        fmt.Fprintf(w, "<h1><ul>Tag 3</ul></h1><p>%v Stunden, %v Minuten</p>", timeResultThree, timeResulttTwo)
-        fmt.Fprintf(w, "<h1><ul>Tag 4</ul></h1><p>%v Stunden, %v Minuten</p>", timeResultFour, timeResulttTwo)
-        fmt.Fprintf(w, "<h1><ul>Tag 5</ul></h1><p>%v Stunden, %v Minuten</p>", timeResultFive, timeResulttTwo)
-        fmt.Fprintf(w, "<h1><ul>Gesamt:</ul></h1><p>%v Stunden, %v Minuten</p>", timeResult+timeResultTwo+timeResultThree+timeResultFour+timeResultFive, timeResultt+timeResulttTwo+timeResulttTwo+timeResulttTwo+timeResulttTwo)
+        fmt.Fprintf(w, "<h1><ul>Tag 3</ul></h1><p>%v Stunden, %v Minuten</p>", timeResultThree, timeResulttThree)
+        fmt.Fprintf(w, "<h1><ul>Tag 4</ul></h1><p>%v Stunden, %v Minuten</p>", timeResultFour, timeResulttFour)
+        fmt.Fprintf(w, "<h1><ul>Tag 5</ul></h1><p>%v Stunden, %v Minuten</p>", timeResultFive, timeResulttFive)
+        fmt.Fprintf(w, "<h1><ul>Gesamt:</ul></h1><p>%v Stunden, %v Minuten</p>", timeResult+timeResultTwo+timeResultThree+timeResultFour+timeResultFive, timeResultt+timeResulttTwo+timeResulttThree+timeResulttFour+timeResulttFive)
 
 	})
 	router.GET("/health", metrics.Uptime())
