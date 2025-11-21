@@ -35,7 +35,7 @@ func main() {
 		fmt.Println("Beende Server...")
 	}()
 
-	//router.GET("/", routes.GetRoot("Test112233\n"))
+	//router.GET("/index.html", )
 	router.GET("/", func(w http.ResponseWriter, r *http.Request, params httprouter.Params){
 
 	err := templates.ExecuteTemplate(w, indexHtml, nil)
@@ -65,7 +65,7 @@ func main() {
 			timeResultFour, timeResulttFour, errFive := calculateHours(leftFour, rightFour)
 			timeResultFive, timeResulttFive, errSix := calculateHours(leftFive, rightFive)
 			if (errTwo != nil)||(errThree != nil)||(errFour != nil)||(errFive != nil)||(errSix != nil) {
-				fmt.Errorf("Error calculateHours")
+				fmt.Print(fmt.Errorf("error calculateHours"))
 			}
 
         // Ergebnis an Browser senden

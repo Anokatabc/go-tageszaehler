@@ -3,56 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link type="text/css" rel="stylesheet" href="/static/style.css">
+  <script defer type="text/javascript" src="/static/main.js"></script>
   <title>Tageszähler</title>
 </head>
 <body>
   <h1>Tageszähler</h1>
 <form method="post" action="/">
+    <label for="month-select">Monat auswählen</label>
+    <select name="Monat" id="month-select"></select>
+    <br>
+    <button id="addDay">Tag hinzufügen</button>
+    <button id="addWeek">Woche hinzufügen</button>
   <table>
-    <tr><th>Alle Arbeitstage im Monat</th></tr>
-    <tr>
-      <td>
-        <label class="label" for="leftOne">01:</label>
-        <input type="text" step="60000" class="input" id="leftOne" name="leftOne" default="01"></input>
-        <label class="label" for="rightOne"></label>
-        <input type="text" step="60000" class="input" id="rightOne" name="rightOne" default="01"></input>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <label class="label" for="leftTwo">02:</label>
-        <input type="text" step="60000" class="input" id="leftTwo" name="leftTwo" default="01"></input>
-        <label class="label" for="rightTwo"></label>
-        <input type="text" step="60000" class="input" id="rightTwo" name="rightTwo" default="01"></input>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <label class="label" for="leftThree">03:</label>
-        <input type="text" step="60000" class="input" id="leftThree" name="leftThree" default="01"></input>
-        <label class="label" for="rightThree"></label>
-        <input type="text" step="60000" class="input" id="rightThree" name="rightThree" default="01"></input>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <label class="label" for="leftFour">04:</label>
-        <input type="text" step="60000" class="input" id="leftFour" name="leftFour" default="01"></input>
-        <label class="label" for="rightFour"></label>
-        <input type="text" step="60000" class="input" id="rightFour" name="rightFour" default="01"></input>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <label class="label" for="leftFive">05:</label>
-        <input type="text" step="60000" class="input" id="leftFive" name="leftFive" default="01"></input>
-        <label class="label" for="rightFive"></label>
-        <input type="text" step="60000" class="input" id="rightFive" name="rightFive" default="01"></input>
-      </td>
-    </tr>
+    <tr><th>Arbeitsstunden-Berechnung</th></tr>
+    <div id="days"></div>
   </table>
   <input type="submit" value="Berechne Gesamtstunden">
 </form>
 </body>
 </html>
-
