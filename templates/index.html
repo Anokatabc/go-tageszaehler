@@ -10,11 +10,17 @@
 <body>
   <h1>Tageszähler</h1>
 <form method="post" action="/">
+    <label for="year-select">Jahr auswählen</label>
+    <select name="Monat" id="year-select"></select>
+    <br>
     <label for="month-select">Monat auswählen</label>
     <select name="Monat" id="month-select"></select>
+    <label for="day-select">Tag auswählen</label>
+    <select name="Tag" id="day-select"></select>
     <br>
-    <button id="addDay">Tag hinzufügen</button>
-    <button id="addWeek">Woche hinzufügen</button>
+    <br>
+    <button type="button" id="addDay">Tag hinzufügen</button>
+    <button type="button" id="addWeek">Woche hinzufügen</button>
   <table>
     <tr><th>Arbeitsstunden-Berechnung</th></tr>
     <div id="days"></div>
