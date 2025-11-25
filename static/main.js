@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', function(){
 
   document.getElementById('addDay').addEventListener('click', addDay);
   document.getElementById('addWeek').addEventListener('click', addWeek);
+  document.getElementById('day-select').addEventListener('change', function(){
+    dayCount = parseInt(dayDropdown.value);
+  });
   document.getElementById('month-select').addEventListener('change', function(){
     // const workdays = document.querySelectorAll('.workdays');
     // if (workdays != null){
@@ -33,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function(){
     dayCount = 1;
     daySelect();
   })
-})
+});
 
 const monthList = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"]
 const weekdays = ['So','Mo','Di','Mi','Do','Fr','Sa']
@@ -86,7 +89,7 @@ function daySelect(){
   dayDropdown.innerHTML = ''
 
   //Ermittle Monatslänge des ausgewählten Monats
-  let daysInSelectedMonth = new Date(yearDropdown.value, monthDropdown.value+1, 0).getDate();
+  let daysInSelectedMonth = new Date(parseInt(yearDropdown.value), parseInt(monthDropdown.value)+1, 0).getDate();
 
   for (let i = 1; i <= daysInSelectedMonth; i++){
     //if (weekdays[(i%7)] == 'Sa' || weekdays[(i%7)] == 'So') continue;
@@ -108,8 +111,9 @@ function daySelect(){
   if (weekdays[preselectedDay] == "So") preselectedDate++;
   if (weekdays[preselectedDay] == "Sa") preselectedDate+=2;
 
-  if (today.getMonth() == monthDropdown.value){
+  if (today.getMonth() == parseInt(monthDropdown.value)){
     dayDropdown.value = preselectedDate;
+    dayCount = parseInt(dayDropdown.value);
   }
 
   console.log('Days Dropdown erfolgreich befüllt!')
@@ -125,16 +129,12 @@ function addWeek(){
 
 let dayCount;
 function addDay(){
-  if (!dayCount){
-    dayCount = dayDropdown.value;
-  }
-
   console.log("dayCount:"+dayCount)
-  if (dayCount > new Date(yearDropdown.value, monthDropdown.value+1, 0).getDate()) {
-    alert(`Das Maximum von ${new Date(yearDropdown.value, monthDropdown.value+1, 0).getDate()} Tagen erreicht!`)
+  if (dayCount > new Date(parseInt(yearDropdown.value), parseInt(monthDropdown.value)+1, 0).getDate()) {
+    alert(`Das Maximum von ${new Date(parseInt(yearDropdown.value), parseInt(monthDropdown.value)+1, 0).getDate()} Tagen im ${monthList[parseInt(monthDropdown.value)]} ${parseInt(yearDropdown.value)} erreicht!`)
     return;
   };
-    let date = new Date(yearDropdown.value, monthDropdown.value, dayCount)
+    let date = new Date(parseInt(yearDropdown.value), parseInt(monthDropdown.value), dayCount)
 
     
 
