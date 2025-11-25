@@ -22,19 +22,15 @@ document.addEventListener('DOMContentLoaded', function(){
     dayCount = parseInt(dayDropdown.value);
   });
   document.getElementById('month-select').addEventListener('change', function(){
-    // const workdays = document.querySelectorAll('.workdays');
-    // if (workdays != null){
-    //   workdays.forEach(element => {
-    //     element.remove();
-    //   })
-    // }
+ 
+  document.querySelectorAll('.workdays').forEach(el => el.remove());
 
-    //besser?
-    const workdays = document.getElementsByClassName('workdays');
-    Array.from(workdays).forEach(element => element.remove());
+  //besser?
+  // const workdays = document.getElementsByClassName('workdays');
+  // Array.from(workdays).forEach(element => element.remove());
 
-    dayCount = 1;
-    daySelect();
+  dayCount = 1;
+  daySelect();
   })
 });
 
@@ -119,19 +115,75 @@ function daySelect(){
   console.log('Days Dropdown erfolgreich befüllt!')
 }
 
-let weekCounter = 0;
+function calculateMonday(year, month, date) {
+  
+  let dateCheck = new Date(parseInt(year), parseInt(month), parseInt(date));
+  if (isNaN(dateCheck.getTime())) {
+    console.error("calculateMonday: Ungültiges Datum!");
+    return null;
+  }
+  console.log("dateCheck="+dateCheck)
+
+  let dayOfWeek = dateCheck.getDay();
+  console.log("dayOfWeek"+dayOfWeek)
+  let daysToMonday = 0;
+
+  switch (dayOfWeek){
+  case 0:
+    daysToMonday = 1;
+    console.log("case 0")
+    break;
+  case 1:
+    daysToMonday = 0;
+    console.log("case 1")
+    break;
+  case 2:
+    if (date-1 < 1) return date;
+    daysToMonday = -1;
+    console.log("case 2")
+    break;
+  case 3:
+    if (date-2 < 1) return date;
+    daysToMonday = -2;
+    console.log("case 3")
+    break;
+  case 4:
+    if (date-3 < 1) return date;
+    daysToMonday = -3;
+    console.log("case 4")
+    break;
+  case 5:
+    if (date-4 < 1) return date;
+    daysToMonday = -4;
+    console.log("case 5")
+    break;
+  case 6:
+    if (date-5 < 1) return date;
+    daysToMonday = -5;
+    console.log("case 6")
+    break;
+  }
+  const monday = new Date(year, month, (parseInt(date)+daysToMonday));
+
+  console.log("calculateMonday="+parseInt(monday.getDate()));
+  return monday.getDate();
+}
+
+let weekCount = 0;
 function addWeek(){
-  let date = today.getDate();
-  let weekday = today.getDay();
-  let dayList;
-  //for (let i = 0; )
+  let date = new Date (parseInt(yearDropdown.value), parseInt(monthDropdown.value), parseInt(dayDropdown.value));
+  console.log("daydropdown.value"+dayDropdown.value+"wird in calculateMonday gegeben")
+  dayDropdown.value = calculateMonday(date.getFullYear(), date.getMonth(), date.getDate());
+
+
 }
 
 let dayCount;
 function addDay(){
   console.log("dayCount:"+dayCount)
-  if (dayCount > new Date(parseInt(yearDropdown.value), parseInt(monthDropdown.value)+1, 0).getDate()) {
-    alert(`Das Maximum von ${new Date(parseInt(yearDropdown.value), parseInt(monthDropdown.value)+1, 0).getDate()} Tagen im ${monthList[parseInt(monthDropdown.value)]} ${parseInt(yearDropdown.value)} erreicht!`)
+  let daysInSelectedMonth = new Date(parseInt(yearDropdown.value), parseInt(monthDropdown.value)+1, 0).getDate()
+  if (dayCount > daysInSelectedMonth) {
+    alert(`Das Maximum von ${daysInSelectedMonth} Tagen im ${monthList[parseInt(monthDropdown.value)]} ${parseInt(yearDropdown.value)} erreicht!`)
     return;
   };
     let date = new Date(parseInt(yearDropdown.value), parseInt(monthDropdown.value), dayCount)
@@ -143,11 +195,21 @@ function addDay(){
 
   if (weekday == 'Sa' || weekday == 'So'){
     dayCount++
-    addDay();
     console.log("Samstag oder Sonntag erreicht - Funktion wird neu aufgerufen.")
     console.log("dayCount:"+dayCount)
     return;
   }
+
+  addDayHTML(dayCount, weekday);
+
+  if (weekday == 'Fr') dayCount+=3;
+  else if (weekday == 'Sa') dayCount+=2;
+  else dayCount++;
+  console.log("dayCount:"+dayCount)
+  return;
+}
+ 
+function addDayHTML(){
   const container = document.getElementById('days');
   const div = document.createElement('div');
   div.className = 'workdays'
@@ -157,14 +219,7 @@ function addDay(){
       <input type="text" class="end" placeholder="HH:MM">
   `
   container.appendChild(div);
-
-  if (weekday == 'Fr') dayCount+=3;
-  else if (weekday == 'Sa') dayCount+=2;
-  else dayCount++;
-  console.log("dayCount:"+dayCount)
-  return;
 }
-
 
 //todos:
 // preventDefault auf submit und validieren, ggf. vereinheitlichen (0en) append leading 0s
