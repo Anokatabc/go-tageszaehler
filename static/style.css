@@ -1,3 +1,17 @@
 body {
   color: purple;
 }
+.start,
+.end{
+  width:15%;
+  display:inline;
+}
+
+.day-label{
+  display:inline-block;
+}
+
+.button-div{
+  display:block;
+  margin-top:4vh;
+}

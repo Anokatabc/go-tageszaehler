@@ -10,21 +10,40 @@
 <body>
   <h1>Tageszähler</h1>
 <form method="post" action="/">
-    <label for="year-select">Jahr auswählen</label>
-    <select name="Monat" id="year-select"></select>
-    <br>
-    <label for="month-select">Monat auswählen</label>
-    <select name="Monat" id="month-select"></select>
-    <label for="day-select">Tag auswählen</label>
-    <select name="Tag" id="day-select"></select>
-    <br>
-    <br>
-    <button type="button" id="addDay">Tag hinzufügen</button>
-    <button type="button" id="addWeek">Woche hinzufügen</button>
-  <table>
-    <tr><th>Arbeitsstunden-Berechnung</th></tr>
-    <div id="days"></div>
-  </table>
+  <label for="year-select">Jahr auswählen</label>
+  <select name="Monat" id="year-select"></select>
+  <label for="month-select">Monat auswählen</label>
+  <select name="Monat" id="month-select"></select>
+  <label for="day-select">Tag auswählen</label>
+  <select name="Tag" id="day-select"></select>
+
+  <div class="button-div">
+    <button class="button" type="button" id="addDay">Tag hinzufügen</button>
+    <button class="button" type="button" id="addWeek">Woche hinzufügen</button>
+  </div>
+  <div id="days"></div>
+  <!-- <div id="start-div"></div>
+  <div id="end-div"></div> -->
+
+  <h2>Arbeitsstunden-Berechnung</h2>
+
+  <!-- <div class="days">Tag 03 - Mo</div>
+  <div class="start">
+    <label>Tag 03 - Mo</label>
+    <input type="text" class="start" placeholder="HH:MM">
+  </div>
+  <div class="end">
+    <input type="text" class="end" placeholder="HH:MM">
+  </div>  
+  <div class="days">Tag 04 - Di</div>
+  <div class="start">
+    <label>Tag 04 - Di</label>
+    <input type="text" class="end" placeholder="HH:MM">
+  </div>
+  <div class="end">
+    <input type="text" class="end" placeholder="HH:MM">
+  </div>   -->
+
   <input type="submit" value="Berechne Gesamtstunden">
 </form>
 </body>

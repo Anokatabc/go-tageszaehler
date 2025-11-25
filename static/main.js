@@ -1,18 +1,54 @@
+/** @type {HTMLDivElement} */
+let monthDropdown;
+/** @type {HTMLDivElement} */
+let yearDropdown;
+/** @type {HTMLDivElement} */
+let dayDropdown;
+
+document.addEventListener('DOMContentLoaded', function(){
+  console.log('Dom fertig geladen, initialisiere Dropdowns.')
+  monthDropdown = document.getElementById('month-select');
+  yearDropdown = document.getElementById('year-select');
+  dayDropdown = document.getElementById('day-select');
+  console.log('Dropdowns zugewiesen, lade Funktionen.')
+  yearSelect();
+  monthSelect(); //befülle Dropdown mit Monaten, aktueller Monat Vorauswahl
+  daySelect();
+
+
+  document.getElementById('addDay').addEventListener('click', addDay);
+  document.getElementById('addWeek').addEventListener('click', addWeek);
+  document.getElementById('month-select').addEventListener('change', function(){
+    // const workdays = document.querySelectorAll('.workdays');
+    // if (workdays != null){
+    //   workdays.forEach(element => {
+    //     element.remove();
+    //   })
+    // }
+
+    //besser?
+    const workdays = document.getElementsByClassName('workdays');
+    Array.from(workdays).forEach(element => element.remove());
+
+    dayCount = 1;
+    daySelect();
+  })
+})
+
 const monthList = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"]
 const weekdays = ['So','Mo','Di','Mi','Do','Fr','Sa']
+let today = new Date();
 /* window.onload = function() {
   monthSelect();
 } */
 
-let today = new Date();
 
-const monthDropdown = document.getElementById('month-select');
 function monthSelect(){
-  if (!monthDropdown) {
-    console.error('Dropdown ungültig!')
+  if (monthDropdown==null) {
+    console.error('M-Dropdown ungültig!');
     return
   }
-
+    
   for (let i = 0; i < monthList.length; i++){
     const option = document.createElement('option');
     option.value = i; //0-11 für Monate
@@ -24,10 +60,9 @@ function monthSelect(){
   console.log('Months Dropdown erfolgreich befüllt!')
 }
 
-const yearDropdown = document.getElementById('year-select');
 function yearSelect(){
   if (!yearDropdown) {
-    console.error('Dropdown ungültig!')
+    console.error('Y-Dropdown ungültig!')
     return
   }
   for (let i = -1; i<2; i++){
@@ -41,17 +76,19 @@ function yearSelect(){
   console.log('Year Dropdown erfolgreich befüllt!')
 }
 
-const dayDropdown = document.getElementById('day-select')
+//Filling Dropdown
 function daySelect(){
   if (dayDropdown == null) {
-    console.error('Dropdown ungültig!')
+    console.error('D-Dropdown ungültig!')
     return
   }
 
   dayDropdown.innerHTML = ''
 
-  const daysInThisMonth = new Date(today.getFullYear(), today.getMonth()+1, 0).getDate();
-  for (let i = 1; i <= daysInThisMonth; i++){
+  //Ermittle Monatslänge des ausgewählten Monats
+  let daysInSelectedMonth = new Date(yearDropdown.value, monthDropdown.value+1, 0).getDate();
+
+  for (let i = 1; i <= daysInSelectedMonth; i++){
     //if (weekdays[(i%7)] == 'Sa' || weekdays[(i%7)] == 'So') continue;
 
     const date = new Date(today.getFullYear(), parseInt(monthDropdown.value), i);
@@ -69,10 +106,13 @@ function daySelect(){
   let preselectedDate = today.getDate();
   let preselectedDay = today.getDay();
   if (weekdays[preselectedDay] == "So") preselectedDate++;
-  if (weekdays[preselectedDay] == "Sa") preselectedDate+2;
-  dayDropdown.value = preselectedDate;
+  if (weekdays[preselectedDay] == "Sa") preselectedDate+=2;
 
-  console.log('Days Months Dropdown erfolgreich befüllt!')
+  if (today.getMonth() == monthDropdown.value){
+    dayDropdown.value = preselectedDate;
+  }
+
+  console.log('Days Dropdown erfolgreich befüllt!')
 }
 
 let weekCounter = 0;
@@ -83,62 +123,48 @@ function addWeek(){
   //for (let i = 0; )
 }
 
-let dayCount = 1;
+let dayCount;
 function addDay(){
-  if (dayCount >= 31) {
-    alert('Das Maximum von 31 Tagen erreicht!')
+  if (!dayCount){
+    dayCount = dayDropdown.value;
+  }
+
+  console.log("dayCount:"+dayCount)
+  if (dayCount > new Date(yearDropdown.value, monthDropdown.value+1, 0).getDate()) {
+    alert(`Das Maximum von ${new Date(yearDropdown.value, monthDropdown.value+1, 0).getDate()} Tagen erreicht!`)
     return;
   };
-  //dayCount++;
-  const selectedMonth = parseInt(monthDropdown.value);
-  const year = today.getFullYear();
-  const date = new Date(year, selectedMonth, dayCount)
+    let date = new Date(yearDropdown.value, monthDropdown.value, dayCount)
+
+    
 
   const weekdayIndex = date.getDay(); //0 = So, 6 = Sa
   const weekday = weekdays[weekdayIndex];
 
   if (weekday == 'Sa' || weekday == 'So'){
-
+    dayCount++
+    addDay();
+    console.log("Samstag oder Sonntag erreicht - Funktion wird neu aufgerufen.")
+    console.log("dayCount:"+dayCount)
+    return;
   }
-
   const container = document.getElementById('days');
-
   const div = document.createElement('div');
   div.className = 'workdays'
   div.innerHTML = `
-    <label>Tag ${dayCount}. - ${weekday}</label>
-    <input type="text" class="start" placeholder="HH:MM">
-    <input type="text" class="end" placeholder="HH:MM">
+      <label class="day-label">Tag ${String(dayCount).padStart(2, '0')}. - ${weekday}</label>
+      <input type="text" class="start" placeholder="HH:MM">
+      <input type="text" class="end" placeholder="HH:MM">
   `
   container.appendChild(div);
 
-  if (weekday == 'Fr') dayCount = dayCount+3;
-  else if (weekday == 'Sa') dayCount = dayCount+2;
+  if (weekday == 'Fr') dayCount+=3;
+  else if (weekday == 'Sa') dayCount+=2;
   else dayCount++;
+  console.log("dayCount:"+dayCount)
   return;
 }
 
-/* function totalDaysInMonth(month) {
-  if (NaN.month) {
-    month = month.parseInt
-  }
-  var now = new Date(2025, month, 1);
-  //console.log("full year = "+now.getFullYear)
-  console.log( new Date(now.getFullYear(), now.getMonth()+1, 0).getDate());
-  } */
-
-document.addEventListener('DOMContentLoaded', function(){
-  console.log('Dom fertig geladen, lade Funktionen')
-  yearSelect();
-  monthSelect(); //befülle Dropdown mit Monaten, aktueller Monat Vorauswahl
-  daySelect();
-
-  document.getElementById('addDay').addEventListener('click', addDay);
-  document.getElementById('addWeek').addEventListener('click', addWeek);
-  document.getElementById('month-select').addEventListener('change', function(){
-    daySelect();
-  })
-})
 
 //todos:
 // preventDefault auf submit und validieren, ggf. vereinheitlichen (0en) append leading 0s
