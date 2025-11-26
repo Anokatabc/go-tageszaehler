@@ -9,7 +9,7 @@
 </head>
 <body>
   <h1>Tageszähler</h1>
-<form method="post" action="/">
+<form method="post" action="/results.html">
   <label for="year-select">Jahr auswählen</label>
   <select name="Monat" id="year-select"></select>
   <label for="month-select">Monat auswählen</label>
@@ -17,9 +17,14 @@
   <label for="day-select">Tag auswählen</label>
   <select name="Tag" id="day-select"></select>
 
+  <span style="position:absolute;right:0px; top:15vh;">
+    <label for="paste" style="display:flex;">(Text mit Uhrzeiten hineinkopieren)</label>
+    <textarea name="paste" id="paste" cols="40" rows="4"></textarea>
+  </span>
   <div class="button-div">
     <button class="button" type="button" id="addDay">Tag hinzufügen</button>
     <button class="button" type="button" id="addWeek">Woche hinzufügen</button>
+    <button class="button" type="button" id="clear">Zurücksetzen</button>
   </div>
   <div id="days"></div>
   <!-- <div id="start-div"></div>

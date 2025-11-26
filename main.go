@@ -24,6 +24,7 @@ var debug bool = true
 var embeddedFS embed.FS
 
 var indexHtml = "index.html"
+var resultsHtml = "results.html"
 
 var templates = template.Must(template.ParseFS(embeddedFS, "templates/*.html"))
 
@@ -46,6 +47,7 @@ func main() {
 	}()
 
 	//router.GET("/index.html", )
+	//router.GET("/results.html", )
 	router.GET("/", func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 
 		err := templates.ExecuteTemplate(w, indexHtml, nil)
@@ -53,46 +55,104 @@ func main() {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	})
-	router.POST("/", func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+
+	router.POST("/results.html", func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 		err := r.ParseForm()
+		templates.ExecuteTemplate(w, resultsHtml, nil)
 		if err != nil {
 			fmt.Print(fmt.Errorf("Parse-Fehler! Beende Funktion"))
 			return
 		}
-		leftOne := r.FormValue("leftOne")
-		rightOne := r.FormValue("rightOne")
-		leftTwo := r.FormValue("leftTwo")
-		rightTwo := r.FormValue("rightTwo")
-		leftThree := r.FormValue("leftThree")
-		rightThree := r.FormValue("rightThree")
-		leftFour := r.FormValue("leftFour")
-		rightFour := r.FormValue("rightFour")
-		leftFive := r.FormValue("leftFive")
-		rightFive := r.FormValue("rightFive")
-		timeResult, timeResultt, errTwo := calculateHours(leftOne, rightOne)
-		timeResultTwo, timeResulttTwo, errThree := calculateHours(leftTwo, rightTwo)
-		timeResultThree, timeResulttThree, errFour := calculateHours(leftThree, rightThree)
-		timeResultFour, timeResulttFour, errFive := calculateHours(leftFour, rightFour)
-		timeResultFive, timeResulttFive, errSix := calculateHours(leftFive, rightFive)
-		if (errTwo != nil) || (errThree != nil) || (errFour != nil) || (errFive != nil) || (errSix != nil) {
-			fmt.Print(fmt.Errorf("error calculateHours"))
+		monthStr := r.PostFormValue("month")
+		yearStr := r.PostFormValue("year")
+
+		month, _ := strconv.Atoi(monthStr)
+		year, _ := strconv.Atoi(yearStr)
+
+		monthNames := []string{
+			"Januar","Februar","März","April","Mai","Juni",
+			"Juli","August","September","Oktober","November","Dezember",
 		}
 
-		// Ergebnis an Browser senden
-		fmt.Fprintf(w, "<h1><ul>Tag 1</ul></h1><p>%v Stunden, %v Minuten</p>", timeResult, timeResultt)
-		fmt.Fprintf(w, "<h1><ul>Tag 2</ul></h1><p>%v Stunden, %v Minuten</p>", timeResultTwo, timeResulttTwo)
-		fmt.Fprintf(w, "<h1><ul>Tag 3</ul></h1><p>%v Stunden, %v Minuten</p>", timeResultThree, timeResulttThree)
-		fmt.Fprintf(w, "<h1><ul>Tag 4</ul></h1><p>%v Stunden, %v Minuten</p>", timeResultFour, timeResulttFour)
-		fmt.Fprintf(w, "<h1><ul>Tag 5</ul></h1><p>%v Stunden, %v Minuten</p>", timeResultFive, timeResulttFive)
-		fmt.Fprintf(w, "<h1><ul>Gesamt:</ul></h1><p>%v Stunden, %v Minuten</p>", timeResult+timeResultTwo+timeResultThree+timeResultFour+timeResultFive, timeResultt+timeResulttTwo+timeResulttThree+timeResulttFour+timeResulttFive)
+		var monthName string
+		if month > 0 && month < len(monthNames) {
+			monthName = monthNames[month]
+		} else {
+			monthName = "Unbekannt"
+		}
 
+
+		//"day${date}_start"
+		type TimeEntry struct {
+			Start string
+			End   string
+		}
+
+		workTimes := make(map[string]TimeEntry)
+
+		for key := range r.PostForm {
+			if !strings.HasSuffix(key, "_start") {
+				continue
+			}
+			fmt.Println("key => ",key)
+
+			workdaySuffix := strings.TrimPrefix(key, "day")
+			workday := strings.TrimSuffix(workdaySuffix, "_start")
+
+			startTime := r.PostFormValue("day"+workday+"_start")
+			endTime := r.PostFormValue("day"+workday+"_end")
+
+			if startTime == "" || endTime == "" {
+				fmt.Printf("Tag %s: Start oder Ende fehlt.",workday)
+				continue
+			}
+
+			workTimes[workday] = TimeEntry{
+				Start: startTime,
+				End: endTime,
+			}
+
+			workTimes[workday] = TimeEntry{
+				Start: startTime,
+				End: endTime,
+			}
+			fmt.Printf("----------------------\nTag hinzugefügt: %s: %s - %s", workday, startTime, endTime)
+		}
+			
+			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			fmt.Fprintf(w, "<h2>Empfangene Daten:</h2>")
+			var incrHours int;
+			var incrMinutes int;
+			for day, times := range workTimes {
+				fmt.Fprintf(w, "<p><b>%02v.%s %v</b>: %02v bis %02v gearbeitet.</p>\n", day, monthName, year, times.Start, times.End)
+				hours, minutes, err := calculateHours(times.Start, times.End)
+				if err != nil {
+					fmt.Println("Error")
+				}
+				incrHours += hours
+				incrMinutes += minutes
+
+				fmt.Fprintf(w, "<p>Arbeitszeit: %d Stunden, %d Minuten", hours, minutes)
+			}
+			
+			totalMinutes := incrMinutes%60
+			totalHours := incrHours + int(incrMinutes/60)
+			fmt.Fprintf(w, "<p>Gesamtarbeitszeit in der Woche: %02d Stunden, %02d Minuten", totalHours, totalMinutes)
+
+		// if errTwo != nil {
+		// 	fmt.Print(fmt.Errorf("error calculateHours"))
+		// }
+
+		// Ergebnis an Browser senden
+		// fmt.Fprintf(w, "<h1><ul>Tag 1</ul></h1><p>%v Stunden, %v Minuten</p>", timeResult, timeResultt)
 	})
+
 	router.GET("/health", metrics.Uptime())
 
 	//router.ServeFiles("/static/*filepath", http.FS(embeddedFS))
 	//router.ServeFiles("/static/*filepath", http.Dir("static"))
 	staticFS, errFS := fs.Sub(embeddedFS, "static")
-	if errFS != nil{
+	if errFS != nil {
 		log.Fatal().Err(errFS).Msg("sub-filesystem error")
 	}
 	router.ServeFiles("/static/*filepath", http.FS(staticFS))
@@ -150,3 +210,6 @@ func parseTime(timeStr string) (hours, minutes int, err error) {
 
 	return hours, minutes, nil
 }
+
+
+//Post zu /results, neues Template
