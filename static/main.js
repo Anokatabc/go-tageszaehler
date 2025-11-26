@@ -313,3 +313,4 @@ function calculateDaysInSelectedMonth(month){
 
 //todos
 //mit string replace für texteingabe arbeiten
+//Problem: Wenn Woche über Monatsene hinausragt, werden alle weiteren Wochen mit reduzierten Tagen erstellt.
