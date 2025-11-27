@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"io/fs"
 	"net/http"
+	"slices"
 	"strconv"
 	"strings"
+	"time"
 
 	"embed"
 	"html/template"
@@ -51,36 +53,48 @@ func main() {
 	router.GET("/", func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 
 		err := templates.ExecuteTemplate(w, indexHtml, nil)
+
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	})
 
+	monthNames := []string{
+		"Januar", "Februar", "März", "April", "Mai", "Juni",
+		"Juli", "August", "September", "Oktober", "November", "Dezember",
+	}
+
+	weekdayNames := []string{
+		"Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag",
+	}
+
+	weekdayNamesShort := []string{
+		"So.", "Mo.", "Di.", "Mi.", "Do.", "Fr.", "Sa.",
+	}
+
 	router.POST("/results.html", func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 		err := r.ParseForm()
-		templates.ExecuteTemplate(w, resultsHtml, nil)
 		if err != nil {
-			fmt.Print(fmt.Errorf("Parse-Fehler! Beende Funktion"))
+			http.Error(w, "Parse-Fehler! Beende Funktion", http.StatusBadRequest)
 			return
 		}
+
+		// templates.ExecuteTemplate(w, resultsHtml, nil) //
+
 		monthStr := r.PostFormValue("month")
 		yearStr := r.PostFormValue("year")
 
 		month, _ := strconv.Atoi(monthStr)
+		month = month + 1 // 0-11 in JS, 1-12 in Go
 		year, _ := strconv.Atoi(yearStr)
 
-		monthNames := []string{
-			"Januar","Februar","März","April","Mai","Juni",
-			"Juli","August","September","Oktober","November","Dezember",
-		}
-
 		var monthName string
-		if month > 0 && month < len(monthNames) {
-			monthName = monthNames[month]
+
+		if month >= 1 && month <= 12 {
+			monthName = monthNames[month-1] //Rückkorrektur auf 0 damit Schleifenlogik funktioniert
 		} else {
 			monthName = "Unbekannt"
 		}
-
 
 		//"day${date}_start"
 		type TimeEntry struct {
@@ -94,57 +108,122 @@ func main() {
 			if !strings.HasSuffix(key, "_start") {
 				continue
 			}
-			fmt.Println("key => ",key)
+			fmt.Println("key => ", key)
 
 			workdaySuffix := strings.TrimPrefix(key, "day")
 			workday := strings.TrimSuffix(workdaySuffix, "_start")
 
-			startTime := r.PostFormValue("day"+workday+"_start")
-			endTime := r.PostFormValue("day"+workday+"_end")
+			startTime := r.PostFormValue("day" + workday + "_start")
+			endTime := r.PostFormValue("day" + workday + "_end")
 
+			// workdays, _ := strconv.Atoi(workday)
 			if startTime == "" || endTime == "" {
-				fmt.Printf("Tag %s: Start oder Ende fehlt.",workday)
+				fmt.Printf("Tag %s: Start oder Ende fehlt.", workday)
+				fmt.Fprintf(w, "Tag %s: Startzeit oder Endzeit fehlt.", workday)
 				continue
 			}
 
 			workTimes[workday] = TimeEntry{
 				Start: startTime,
-				End: endTime,
+				End:   endTime,
 			}
 
-			workTimes[workday] = TimeEntry{
-				Start: startTime,
-				End: endTime,
-			}
 			fmt.Printf("----------------------\nTag hinzugefügt: %s: %s - %s", workday, startTime, endTime)
 		}
-			
-			w.Header().Set("Content-Type", "text/html; charset=utf-8")
-			fmt.Fprintf(w, "<h2>Empfangene Daten:</h2>")
-			var incrHours int;
-			var incrMinutes int;
-			for day, times := range workTimes {
-				fmt.Fprintf(w, "<p><b>%02v.%s %v</b>: %02v bis %02v gearbeitet.</p>\n", day, monthName, year, times.Start, times.End)
-				hours, minutes, err := calculateHours(times.Start, times.End)
-				if err != nil {
-					fmt.Println("Error")
-				}
-				incrHours += hours
-				incrMinutes += minutes
 
-				fmt.Fprintf(w, "<p>Arbeitszeit: %d Stunden, %d Minuten", hours, minutes)
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		fmt.Fprintf(w, "<h3>Empfangene Daten:</h3>")
+		fmt.Fprintf(w, "<h3>Arbeitsstunden - %s %d:</h3>", monthName, year)
+
+		var incrMinutes int
+		var incrHours int
+		var weekMinutes int
+		var weekHours int
+
+		//dayKeys := slices.Sorted(maps.Keys(workTimes))
+		dayKeys := make([]string, 0, len(workTimes))
+		for key := range workTimes {
+			dayKeys = append(dayKeys, key)
+		}
+		
+		dayKeysInt := make([]int, 0, len(dayKeys))
+		for _, keyStr := range dayKeys {
+			keyInt, err := strconv.Atoi(keyStr)
+			if err != nil {
+				err.Error()
+				continue
 			}
-			
-			totalMinutes := incrMinutes%60
-			totalHours := incrHours + int(incrMinutes/60)
-			fmt.Fprintf(w, "<p>Gesamtarbeitszeit in der Woche: %02d Stunden, %02d Minuten", totalHours, totalMinutes)
+			dayKeysInt = append(dayKeysInt, keyInt)
+		}
 
-		// if errTwo != nil {
-		// 	fmt.Print(fmt.Errorf("error calculateHours"))
-		// }
+		slices.Sort(dayKeysInt)
 
-		// Ergebnis an Browser senden
-		// fmt.Fprintf(w, "<h1><ul>Tag 1</ul></h1><p>%v Stunden, %v Minuten</p>", timeResult, timeResultt)
+		var lastWeek int
+
+		for _, day := range dayKeysInt {
+			times := workTimes[strconv.Itoa(day)]
+			dayStr, _ := strconv.Atoi(strconv.Itoa(day))
+
+			currentDate := createDate(year, month, day)
+			weekNumber := getWeekNumber(currentDate)
+			weekdayName := weekdayNames[currentDate.Weekday()]
+
+			if weekNumber != lastWeek {
+				if lastWeek != 0 {
+					fmt.Fprintf(w, "<hr>")
+					totalWeekMinutes := weekMinutes % 60
+					totalWeekHours := weekHours + int(weekMinutes/60)
+
+					fmt.Fprintf(w, "<p><b>Wochensumme: %02d:%02d</p></b>", totalWeekHours, totalWeekMinutes)
+					fmt.Fprintf(w, "<hr>")
+				}
+				weekMinutes = 0
+				weekHours = 0
+
+				mondayDate := getMondayOfWeek(currentDate)
+				fridayDate := mondayDate.AddDate(0, 0, 4)
+
+				fmt.Fprintf(w, "<h4>KW %v (Mo. %02v.%02v. - Fr. %02v.%02v.)</h4>",
+					weekNumber,
+					mondayDate.Day(),
+					int(mondayDate.Month()),
+					fridayDate.Day(),
+					int(fridayDate.Month()))
+
+				lastWeek = weekNumber
+			}
+
+			fmt.Fprintf(w, "<p><b>%s, %02v.%s %v</b>: %02v bis %02v gearbeitet.</p>\n",
+				weekdayName, dayStr, monthName, year, times.Start, times.End)
+
+			hours, minutes, err := calculateHours(times.Start, times.End)
+			if err != nil {
+				fmt.Println("Fehler bei der Arbeitszeitberechnung am", day, monthName, year, err.Error())
+				fmt.Fprintf(w, "<p style='color:red;'>Problem am %02v %v %v - Am Vormittag (%v) oder am Nachmittag (%v): %v</p>", day, monthName, year, times.Start, times.End, err.Error())
+				continue
+			}
+
+			weekMinutes += minutes
+			weekHours += hours
+
+			incrMinutes += minutes
+			incrHours += hours
+
+			fmt.Fprintf(w, "Arbeitszeit %s: %v Stunden, %v Minuten", weekdayNamesShort[currentDate.Weekday()], hours, minutes)
+		}
+
+		if lastWeek != 0 {
+			totalWeekMinutes := weekMinutes % 60
+			totalWeekHours := weekHours + int(weekMinutes/60)
+			fmt.Fprintf(w, "<p><b>Wochensumme KW %v: %02d Stunden, %02d Minuten</p></b>", lastWeek, totalWeekHours, totalWeekMinutes)
+		}
+
+		totalMinutes := incrMinutes % 60
+		totalHours := incrHours + int(incrMinutes/60)
+		fmt.Fprintf(w, "<hr><b><u><p>Gesamtarbeitszeit</u></b> %v %v: %d Stunden, %d Minuten", monthName, year, totalHours, totalMinutes)
+
+		fmt.Fprintf(w, "<hr>")
+		fmt.Fprintf(w, "<br><a href='/'>Zurück</a>")
 	})
 
 	router.GET("/health", metrics.Uptime())
@@ -165,6 +244,37 @@ func main() {
 	log.Fatal().Err(err).Msg("server failed")
 
 	// router.GET("/", ...)
+}
+
+func getWeekNumber(date time.Time) int {
+	_, week := date.ISOWeek()
+	return week
+}
+
+func getMondayOfWeek(date time.Time) time.Time {
+	weekday := date.Weekday()
+	daysToMonday := 0
+	switch weekday {
+	case 0:
+		daysToMonday += 1
+	case 1:
+		daysToMonday = 0 //nötig?
+	case 2:
+		daysToMonday -= 1
+	case 3:
+		daysToMonday -= 2
+	case 4:
+		daysToMonday -= 3
+	case 5:
+		daysToMonday -= 4
+	case 6:
+		daysToMonday -= 5
+	}
+	return createDate(int(date.Year()), int(date.Month()), date.Day()+daysToMonday)
+}
+
+func createDate(year, month, day int) time.Time {
+	return time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
 }
 
 func calculateHours(left, right string) (hours, minutes int, err error) {
@@ -211,5 +321,32 @@ func parseTime(timeStr string) (hours, minutes int, err error) {
 	return hours, minutes, nil
 }
 
-
 //Post zu /results, neues Template
+
+/*
+function setupFormatting(input){
+  input.addEventListener('input', function() {
+    // Nur Ziffern erlauben
+    let value = input.value.replace(/[^0-9]/g, '');
+
+    // Max 4 Ziffern
+    if (value.length > 4) {
+      value = value.slice(0, 4);
+    }
+
+    // Bei 4 Ziffern: Doppelpunkt in der Mitte einfügen
+    if (value.length === 4) {
+      input.value = value.slice(0, 2) + ':' + value.slice(2);
+    } else {
+      input.value = value;
+    }
+  });
+}
+*/
+
+//todo:
+//Dezember "unbekannt"
+//Zwischenspeicher wird durch "zurücksetzen" (js-button) nicht geleert
+//KW wird vor und über Monat hinaus angegeben.
+//Auswertung (bzw. Anzeige) beginnt eine Woche zu spät? Aber nur manchmal
+//Wochenrechnung aktuell komplett durcheinander.

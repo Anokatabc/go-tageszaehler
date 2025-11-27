@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function(){
         monthInput.value = month;
         this.appendChild(monthInput);
     }
-    
+
     if (!document.querySelector('input[name="year"]')) {
         const yearInput = document.createElement('input');
         yearInput.type = 'hidden';
@@ -68,19 +68,23 @@ document.addEventListener('DOMContentLoaded', function(){
         yearInput.value = year;
         this.appendChild(yearInput);
     }
-    
   });
 });
  
 function clearPage(){
   document.querySelectorAll('.workdays').forEach(el => el.remove());
+  //todo: auch header löschen
   weekCount = 0; //für 'Woche hinzufügen' Button
 
   //besser?
   // const workdays = document.getElementsByClassName('workdays');
   // Array.from(workdays).forEach(element => element.remove());
 
-  dayCount = 1;
+  dayCount = 1; //todo: resetten basierend auf Monat... (if month && if year)
+  //if sa/so
+  //dayCount = preselectedDate;
+  //dayDropdown.value = preselectedDate;
+  //else = 1
   daySelect();
 }
 
@@ -176,7 +180,7 @@ function calculateMonday(year, month, date) {
   console.log("dateCheck="+dateCheck);
 
   const dayOfWeek = dateCheck.getDay(); //0-6
-  console.log("Übergebener Wochentag"+weekdays[dayOfWeek]+" ; "+date);
+  // console.log("Übergebener Wochentag"+weekdays[dayOfWeek]+" ; "+date);
 
   let daysToMonday = 0;
 
@@ -215,7 +219,7 @@ function calculateMonday(year, month, date) {
     console.log("case 6")
     break;
   }
-  const monday = new Date(year, month, (parseInt(date)+daysToMonday));
+  const monday = new Date(year, month, (parseInt(date)+daysToMonday)); //todo: ggf. anpassen für Monatsenden
 
   console.log("calculateMonday="+parseInt(monday.getDate())+" is monday? -> "+weekdays[monday.getDay()]+". Monat: "+monthList[monday.getMonth()]+";"+monday.getMonth());
   return monday.getDate();
@@ -233,15 +237,24 @@ function addWeek(){
     console.error("Maximale Wochenanzahl erreicht!")
     return;
   }
-  console.log("daydropdown.value"+dayDropdown.value+"wird in calculateMonday gegeben")
+  // console.log("daydropdown.value"+dayDropdown.value+"wird in calculateMonday gegeben")
 
-  const calculatedMonday = calculateMonday(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+  const calculatedMonday = calculateMonday(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate()); 
+  //todo: besser mit date-objekt? ^
+  
   console.log("result calculateMonday: "+calculateMonday(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate()))
   /* 
   Montag kalkuliert
   Tage Montag bis Freitag befüllen
 
   */
+  const container = document.getElementById('days');
+  const div = document.createElement('div'); //ggf. Klasse vergeben
+  div.className = 'workdays'
+  div.innerHTML = `
+    <h2>Arbeitswoche vom ${calculatedMonday}. bis ${calculatedMonday+4}.</h2>
+  `
+  container.appendChild(div);
   for (let i = 0; i<5; i++){
     const dayNumber = calculatedMonday + i;
     const date = new Date(parseInt(yearDropdown.value), parseInt(monthDropdown.value), dayNumber);
@@ -250,11 +263,10 @@ function addWeek(){
       case 6: continue;
       case 0: continue;
     }
-    if (date.getDate() >= calculateDaysInSelectedMonth(parseInt(monthDropdown.value))){
+    if (dayNumber > calculateDaysInSelectedMonth(parseInt(monthDropdown.value))){
       console.error('End of month reached!')
       break;
     }
-
     addDayHTML(dayNumber, weekdayIndex);
   }
   // 
@@ -264,7 +276,7 @@ function addWeek(){
 
 let dayCount;
 function addDay(){
-  console.log("dayCount:"+dayCount)
+  // console.log("dayCount:"+dayCount)
   let daysInSelectedMonth = calculateDaysInSelectedMonth(parseInt(monthDropdown.value));
   if (dayCount > daysInSelectedMonth) {
     alert(`Das Maximum von ${daysInSelectedMonth} Tagen im ${monthList[parseInt(monthDropdown.value)]} ${parseInt(yearDropdown.value)} erreicht!`)
@@ -278,7 +290,7 @@ function addDay(){
   while (weekday == 'Sa' || weekday == 'So'){
     dayCount++
     console.log("Samstag oder Sonntag erreicht - Counter wird inkrementiert.")
-    console.log("dayCount:"+dayCount)
+    // console.log("dayCount:"+dayCount)
     if (dayCount > daysInSelectedMonth){
       alert('Maximum erreicht!');
       return;
@@ -286,25 +298,54 @@ function addDay(){
   }
 
   addDayHTML(dayCount, weekdayIndex);
-
   if (weekday == 'Fr') dayCount+=3;
   else if (weekday == 'Sa') dayCount+=2;
   else dayCount++;
-  console.log("dayCount:"+dayCount)
+  // console.log("dayCount:"+dayCount)
   return;
 }
  
+const startTimes = ["06:12","06:27","06:45","07:03","07:18","07:26","07:41","07:55","08:04",
+  "08:17","08:29","08:46","08:53","09:05","09:14","09:27","09:35","09:48","10:02","10:10",
+   "06:08","06:33","06:47","07:05","07:22","07:39","07:54","08:06","08:15","08:38","08:52",
+   "09:04","09:16","09:28","09:41","09:56","10:03","10:11","10:22","10:29","25:14","07:72",
+   "06:34","28:03","10:18"];
+const endTimes = ["14:48","15:03","14:57","15:42","15:55","16:08","16:22","16:37","16:11",
+  "16:49","17:02","17:18","17:34","17:12","17:48","17:56","18:03","18:15","16:44","17:27", 
+  "14:42","15:11","14:59","15:37","15:51","16:03","16:28","16:17","16:46","17:04","17:22",
+  "17:11","17:39","17:53","18:02","18:14","16:33","16:57","17:18","17:44","17:22","16:05",
+  "18:77","14:59","61:15"];
+
 function addDayHTML(date, day){
   const container = document.getElementById('days');
   const div = document.createElement('div');
   div.className = 'workdays'
   div.innerHTML = `
       <label class="day-label">Tag ${String(date).padStart(2, '0')}. - ${weekdays[day]}</label>
-      <input type="text" class="start" name="day${date}_start" placeholder="HH:MM">
-      <input type="text" class="end" name="day${date}_end" placeholder="HH:MM">
-      <button type="button" class="delete-day-btn">❌</button>
+      <input type="text" class="start" name="day${date}_start" placeholder="HH:MM" value="${startTimes[Math.floor(Math.random()*startTimes.length)]}">
+      <input type="text" class="end" name="day${date}_end" placeholder="HH:MM" value="${endTimes[Math.floor(Math.random()*endTimes.length)]}">
+      <button type="button" tabindex="-1" class="delete-day-btn">❌</button>
   `
   container.appendChild(div);
+
+  /** @type {HTMLDivElement} */
+  const startInput = div.querySelector(".start");
+  /** @type {HTMLDivElement} */
+  const endInput = div.querySelector(".end");
+  setupFormatting(startInput);
+  setupFormatting(endInput);
+}
+
+function setupFormatting(input){
+  input.addEventListener('input', function() {
+    console.log("input",input);
+    let content = input.value;
+    if (content.length == 4 && !content.includes(":")){
+      console.log("yes");
+      // content.replace(/[^0-9]/g, '');
+      input.value = content.slice(0, 2) + ":" + content.slice(2);
+    } else return;
+  });
 }
 
 function calculateDaysInSelectedMonth(month){
@@ -312,5 +353,5 @@ function calculateDaysInSelectedMonth(month){
 }
 
 //todos
-//mit string replace für texteingabe arbeiten
 //Problem: Wenn Woche über Monatsene hinausragt, werden alle weiteren Wochen mit reduzierten Tagen erstellt.
+//außerdem 1. Woche bisweilen fehlerhaft wenn unvollständig
