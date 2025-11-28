@@ -15,3 +15,8 @@ body {
   display:block;
   margin-top:4vh;
 }
+
+table{
+  margin-left: 10%;
+  width:80%;
+}

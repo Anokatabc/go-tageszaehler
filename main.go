@@ -160,6 +160,14 @@ func main() {
 
 		var lastWeek int
 
+		fmt.Fprintf(w, "<table border='1' style='width:80%;'>")
+		fmt.Fprintf(w, "<thead>")
+		fmt.Fprintf(w, "<tr>")
+		fmt.Fprintf(w, "<th>Tag</th><th>Monat</th><th>Jahr</th>")
+		fmt.Fprintf(w, "</tr>")
+		fmt.Fprintf(w, "</thead>")
+		fmt.Fprintf(w, "<tbody>")
+		
 		for _, day := range dayKeysInt {
 			times := workTimes[strconv.Itoa(day)]
 			dayStr, _ := strconv.Atoi(strconv.Itoa(day))
@@ -174,32 +182,35 @@ func main() {
 					totalWeekMinutes := weekMinutes % 60
 					totalWeekHours := weekHours + int(weekMinutes/60)
 
-					fmt.Fprintf(w, "<p><b>Wochensumme: %02d:%02d</p></b>", totalWeekHours, totalWeekMinutes)
-					fmt.Fprintf(w, "<hr>")
+					fmt.Fprintf(w, "<tr><td colspan='3'><b>Wochensumme: %02d:%02d</b></td></tr>", totalWeekHours, totalWeekMinutes)
+					// fmt.Fprintf(w, "<hr>")
 				}
 				weekMinutes = 0
 				weekHours = 0
 
 				mondayDate := getMondayOfWeek(currentDate)
 				fridayDate := mondayDate.AddDate(0, 0, 4)
-
-				fmt.Fprintf(w, "<h4>KW %v (Mo. %02v.%02v. - Fr. %02v.%02v.)</h4>",
-					weekNumber,
-					mondayDate.Day(),
-					int(mondayDate.Month()),
-					fridayDate.Day(),
-					int(fridayDate.Month()))
+				
+				fmt.Fprintf(w, "<tr><td colspan='3'><b>Mo. %02v.%02v. - Fr. %02v.%02v. (KW %v)</b></td></tr>",
+				mondayDate.Day(),
+				int(mondayDate.Month()),
+				fridayDate.Day(),
+				int(fridayDate.Month()),
+				weekNumber,
+				)
 
 				lastWeek = weekNumber
 			}
 
-			fmt.Fprintf(w, "<p><b>%s, %02v.%s %v</b>: %02v bis %02v gearbeitet.</p>\n",
-				weekdayName, dayStr, monthName, year, times.Start, times.End)
+			fmt.Fprintf(w, "<tr><td><b>%s, %02v.</td> <td>%s</td> <td>%v</td></b></tr>",
+			weekdayName, dayStr, monthName, year)
+			fmt.Fprintf(w, "<tr><td>Arbeitszeit:</td> <td>%02v</td> <td>bis %02v</td></tr>", times.Start, times.End)
+			
 
 			hours, minutes, err := calculateHours(times.Start, times.End)
 			if err != nil {
 				fmt.Println("Fehler bei der Arbeitszeitberechnung am", day, monthName, year, err.Error())
-				fmt.Fprintf(w, "<p style='color:red;'>Problem am %02v %v %v - Am Vormittag (%v) oder am Nachmittag (%v): %v</p>", day, monthName, year, times.Start, times.End, err.Error())
+				fmt.Fprintf(w, "<tr style='color:red;'><td colspan='3'>Problem am %02v %v %v - Am Vormittag (%v) oder am Nachmittag (%v): %v</td></tr>", day, monthName, year, times.Start, times.End, err.Error())
 				continue
 			}
 
@@ -209,20 +220,22 @@ func main() {
 			incrMinutes += minutes
 			incrHours += hours
 
-			fmt.Fprintf(w, "Arbeitszeit %s: %v Stunden, %v Minuten", weekdayNamesShort[currentDate.Weekday()], hours, minutes)
+			//asd
+			fmt.Fprintf(w, "<tr><td> %s: %v Stunden, %v Minuten</td></tr>", weekdayNamesShort[currentDate.Weekday()], hours, minutes)
 		}
 
 		if lastWeek != 0 {
 			totalWeekMinutes := weekMinutes % 60
 			totalWeekHours := weekHours + int(weekMinutes/60)
-			fmt.Fprintf(w, "<p><b>Wochensumme KW %v: %02d Stunden, %02d Minuten</p></b>", lastWeek, totalWeekHours, totalWeekMinutes)
+			fmt.Fprintf(w, "<tr><td colspan='3'><b>Wochensumme KW %v: %02d Stunden, %02d Minuten</b></td></tr>", lastWeek, totalWeekHours, totalWeekMinutes)
 		}
 
 		totalMinutes := incrMinutes % 60
 		totalHours := incrHours + int(incrMinutes/60)
-		fmt.Fprintf(w, "<hr><b><u><p>Gesamtarbeitszeit</u></b> %v %v: %d Stunden, %d Minuten", monthName, year, totalHours, totalMinutes)
+		fmt.Fprintf(w, "<tr><td colspan='3'><b><u>Gesamtarbeitszeit</u></b> %v %v: %d Stunden, %d Minuten</td></tr>", monthName, year, totalHours, totalMinutes)
 
-		fmt.Fprintf(w, "<hr>")
+		fmt.Fprintf(w, "</tbody>")
+		fmt.Fprintf(w, "</table>")
 		fmt.Fprintf(w, "<br><a href='/'>Zurück</a>")
 	})
 
@@ -350,3 +363,10 @@ function setupFormatting(input){
 //KW wird vor und über Monat hinaus angegeben.
 //Auswertung (bzw. Anzeige) beginnt eine Woche zu spät? Aber nur manchmal
 //Wochenrechnung aktuell komplett durcheinander.
+/*
+11:00|16:38
+07:22|17:04
+06:47|15:00
+6:41|14:37
+6:40|15:25
+*/
