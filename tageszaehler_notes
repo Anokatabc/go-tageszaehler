@@ -1,0 +1,52 @@
+content
+type Content struct { //Übergabe an Template
+	MonthName string+
+	Year      int+
+	WorkTimes []TimeEntry
+	WeekTimes []Weeks
+	TotalTime TotalTime
+}
+content.TotalTime.Hours
+oder instanziieren und dann hinzufügen?
+totalTime.Hours -> content = append(...)
+type TotalTime struct {
+	Hours	int+
+	Minutes	int+
+}
+weeks -> content = append
+type Weeks struct {
+	WeekNumber int+
+	Monday			string+
+	Friday			string+
+	Hours      int+
+	Minutes    int+
+}
+timeEntry ... //in initialer Schleife gefüllt
+type TimeEntry struct {
+	Weekday        string+
+	Start          string+
+	End            string+
+	WorkdayDate    string+
+	RelativeMonday string+
+	RelativeFriday string+
+	Error          string+
+	Hours						int+
+	Minutes					int+
+	//Hier auch schon Stunden berechnen?y
+} 
+
+1) Ist es der richtige Ansatz content über params zu übergeben? Oder wie sonst übergibt man sie dem Template zur Ausführung? Aktuell sagt es immer "can't evaluate field Content in type main.Content", egal ob ich die Instanz von content oder den Struct Content{} übergebe.
+2) Richtig einzelne Structs zu instanziieren und dann Content hinzuzufügen (content = append...)? Oder direkt in Content speichern content.TotalTime = TotalTime{...}?
+3) Wie sieht aktuell die Sortierung aus? Aktuell sortiere ich glaube ich gar nicht. Bzw. die Sortierung, die erfolgt, ist vielleicht nicht wirksam, da sie zu spät ist. Bevor die Sortierung stattfindet, werden schon Werte in Content gespeichert. Lassen die sich nachträglich sortieren? Aber erlaubt das neue Setup mit Content vielleicht ohnehin das sortierte, chronologische Abfragen der Werte? Sollte ich alternativ erneut eine Extraschleife vorher setzen, die einzig die Post-Werte sortiert, um diese danach weiter zu bearbeiten? Ich müsste mir sowieso noch einmal Gedanken dazu machen, wie das Auslesen von Content{} erfolgt. Aber dazu können wir später noch kommen. Die Auslesung von Datenstrukturen via {{range .Content}} erfolgt der Reihe nach und lässt sich nicht chronologisch sortieren, oder? Wäre also die Frage: Vor den Schleifen vor-sortieren oder am Ende einmal durch Content iterieren und ggf. ein neues ContentSorted erstellen. Oder noch eine andere Alternative?
+
+Suchen:
+golang template execute sort values
+golang sort struct
+https://www.reddit.com/r/golang/comments/1dggpvt/any_patternsstrategies_for_htmltemplate_and_form/
+
+golang give parameters before template execute
+golang give struct data to template to execute
+golang append struct with data or enter it directly into struct?
+
+...
+https://stackoverflow.com/questions/18276173/calling-a-template-with-several-pipeline-parameters

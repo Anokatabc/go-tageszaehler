@@ -3,16 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="/static/style.css">
-<style>
-  body{
-    color:rgb(254, 3, 200);
-  }
-</style>
+  <title>Arbeitsstunden</title>
+  <link rel="stylesheet" href="../static/style.css">
 </head>
 <body>
-  <h1>Empfangene Daten</h1>
-  {{.Content}}
+  <p><a href="javascript:void(0)" onclick="window.history.go(-1)">^Zurück (vorherige Eingaben)</a></p>
+  <h3>Empfangene Daten:</h3>
+  <h3>Arbeitsstunden - {{.MonthName}} {{.Year}}:</h3>
+  <table>
+    <!-- {{if not .WorkTimes}} -->
+    <tr class="go-template">
+      <td colspan="4">Keine Arbeitszeiten verfügbar.</td>
+    </tr>
+    <!-- {{end}} -->
+    <!-- {{range .WorkTimes}} -->
+    <thead>
+      <tr>
+        <!-- {{if .IsFirstWorkdayInWeek}} -->
+        <th colspan="4" style="text-align: center;">
+          Woche vom {{.RelativeMonday}}. bis {{.RelativeFriday}}. {{$.MonthName}}
+        </th>
+        <!-- {{end}} -->
+      </tr>
+      <tr>
+        <th scope="col">Datum</th>
+        <th scope="col">Tag</th>
+        <th scope="col">Uhrzeiten</th>
+        <th scope="col">Arbeitszeit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{.WorkdayDate}}. {{$.MonthName}} {{$.Year}}</td> <!-- Date -->
+        <td>{{.Weekday}}</td>
+        <td>{{.Start}} bis {{.End}}</td>
+        <td>{{.Hours}} Std., {{.Minutes}} Min.</td>
+      </tr>
+      <!-- {{if .Error}} -->
+      <tr class="go-template">
+        <td colspan="4" style="color: red;">
+          {{.Error}}
+        </td>
+      </tr>
+      <!-- {{end}} -->
+    <!-- {{end}} -->
+    </tbody>
+  </table>
+  <h4>Gesamtzeit im {{.MonthName}}: {{.TotalTime.Hours}} Stunden, {{.TotalTime.Minutes}} Minuten</h4>
+  <br>
+  <p><a href="/">Zurück (neu)</a></p>
 </body>
 </html>
+<!-- 
+Also, even if you are in an inner context, 
+e.g. inside a range or with, you may always 
+access .Site.Menus.main by adding $ before it, i.e.:
+
+$.Site.Menus.main
+
+
+The posted answer suggesting the use of curlycurly$.Namecurlycurly points 
+to the Go text/template documentation under Variables:
+
+When execution begins, $ is set to the data argument passed 
+to Execute, that is, to the starting value of dot.
+
+-->
