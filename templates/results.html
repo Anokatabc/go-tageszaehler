@@ -5,49 +5,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Arbeitsstunden</title>
   <link rel="stylesheet" href="../static/style.css">
+  <script defer type="text/javascript" src="/static/results.js"></script>
 </head>
 <body>
   <p><a href="javascript:void(0)" onclick="window.history.go(-1)">^Zurück (vorherige Eingaben)</a></p>
+  <div style="display: flex; justify-content: center;">
+    <button id="reduce">Ausgabetabelle verkleinern</button>
+    <button id="enhance">Ausgabetabelle vergrößern</button>
+  </div>
   <h3>Empfangene Daten:</h3>
   <h3>Arbeitsstunden - {{.MonthName}} {{.Year}}:</h3>
   <table>
-    <!-- {{if not .WorkTimes}} -->
-    <tr class="go-template">
-      <td colspan="4">Keine Arbeitszeiten verfügbar.</td>
-    </tr>
-    <!-- {{end}} -->
-    <!-- {{range .WorkTimes}} -->
+    {{range $day := .WorkTimes}}
+  
+  {{if $day.IsFirstWorkdayInWeek}}
     <thead>
       <tr>
-        <!-- {{if .IsFirstWorkdayInWeek}} -->
-        <th colspan="4" style="text-align: center;">
-          Woche vom {{.RelativeMonday}}. bis {{.RelativeFriday}}. {{$.MonthName}}
-        </th>
-        <!-- {{end}} -->
-      </tr>
-      <tr>
-        <th scope="col">Datum</th>
-        <th scope="col">Tag</th>
-        <th scope="col">Uhrzeiten</th>
-        <th scope="col">Arbeitszeit</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>{{.WorkdayDate}}. {{$.MonthName}} {{$.Year}}</td> <!-- Date -->
-        <td>{{.Weekday}}</td>
-        <td>{{.Start}} bis {{.End}}</td>
-        <td>{{.Hours}} Std., {{.Minutes}} Min.</td>
-      </tr>
-      <!-- {{if .Error}} -->
-      <tr class="go-template">
-        <td colspan="4" style="color: red;">
-          {{.Error}}
+        <td colspan="4" style="text-align: center;">
+          <b>KW {{$day.WeekNumber}}: Woche vom {{$day.RelativeMonday}}. bis {{$day.RelativeFriday}}. {{$.MonthName}}</b>
         </td>
       </tr>
-      <!-- {{end}} -->
-    <!-- {{end}} -->
-    </tbody>
+      <tr>
+        <th>Datum</th>
+        <th>Tag</th>
+        <th>Uhrzeiten</th>
+        <th>Arbeitszeit</th>
+      </tr>
+    </thead>
+  {{end}}
+  
+  <tbody>
+    <tr>
+      <td>{{$day.WorkdayDate}}. {{$.MonthName}} {{$.Year}}</td>
+      <td>{{$day.Weekday}}</td>
+      <td>{{$day.Start}} bis {{$day.End}}</td>
+      <td>{{$day.Hours}} Std., {{$day.Minutes}} Min.</td>
+    </tr>
+    
+    {{if $day.IsLastWorkdayInWeek}}
+      <tr style="background-color: #e8f4f8; font-weight: bold;">
+        <td colspan="4">
+          Arbeitszeit in der Woche: {{$day.WeekHours}} Stunden, {{$day.WeekMinutes}} Minuten
+        </td>
+      </tr>
+    {{end}}
+  </tbody>
+  
+{{end}}
   </table>
   <h4>Gesamtzeit im {{.MonthName}}: {{.TotalTime.Hours}} Stunden, {{.TotalTime.Minutes}} Minuten</h4>
   <br>

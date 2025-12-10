@@ -4,8 +4,9 @@
 }
 
 body {
-  color: purple;
+  color: rgb(168, 0, 168);
   /* background-color: pink; */
+  background-color: #f7f4e1;
 }
 .start,
 .end{
@@ -15,6 +16,7 @@ body {
 
 .day-label{
   display:inline-block;
+  width:80px;
 }
 
 .button-div{
@@ -25,6 +27,7 @@ body {
 table, tr, td, th{
   border:1px;
   border-style: solid;
+  text-align: center;
 }
 table{
   margin: 0 auto;
@@ -177,6 +180,11 @@ table{
   border-color: #2A7B9B;;
   border-color: linear-gradient(90deg,rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 221, 83, 1) 100%);
 }
+
+
+
+
+
 
 
 

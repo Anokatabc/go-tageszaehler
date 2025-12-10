@@ -11,15 +11,18 @@
 <body>
   <h1>Tageszähler</h1>
 <form method="post" action="/results.html">
-  <label for="year-select">Jahr auswählen</label>
-  <select name="Monat" id="year-select"></select>
-  <label for="month-select">Monat auswählen</label>
-  <select name="Monat" id="month-select"></select>
-  <label for="day-select">Tag auswählen</label>
-  <select name="Tag" id="day-select"></select>
-  <br>
-  <label id="calendar-label" for="datepicker">Alternativ-Daten auswählen: </label>
-  <input id="datepicker" type="date">
+  <div class="date-selections">
+    <label for="year-select">Jahr auswählen</label>
+    <select name="Monat" id="year-select"></select>
+    <label for="month-select">Monat auswählen</label>
+    <select name="Monat" id="month-select"></select>
+    <label for="day-select">Tag auswählen</label>
+    <select name="Tag" id="day-select"></select>
+    <br>
+    <label id="calendar-label" for="datepicker">Alternativ-Daten auswählen: </label>
+    <input id="datepicker" type="date">
+    <button style="margin-left:10%;" class="button" type="button" id="addWeek">Woche hinzufügen</button>
+  </div>
   <div class="random-div"></div>
   <div class="calendar-outer">
     <div id="calendar" class="calendar">
@@ -54,8 +57,6 @@
     <textarea name="paste" id="paste" cols="40" rows="5"></textarea>
   </span> -->
   <div class="button-div">
-    <button class="button" type="button" id="addDay">Tag hinzufügen</button>
-    <button class="button" type="button" id="addWeek">Ganze Woche hinzufügen</button>
     <button class="button" type="button" id="clear">Übersicht zurücksetzen</button>
   </div>
   <div id="days"></div>
