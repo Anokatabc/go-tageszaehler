@@ -1,33 +1,221 @@
-* { 
-  box-sizing : border-box;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+:root{
+  --main-gradient: radial-gradient(circle, rgba(156, 233, 255, 1) 0%, rgba(197, 239, 250, 1) 100%);
+  --main-color: #9ce9ff;
+  --main-color-light: #c7f0fc;
+  --main-color-dark: #4fbad7;
+  --main-color-dark-half: #4fbad7;
+  --center-color: #fffef5;
 }
 
-body {
+@font-face {
+  font-family: 'Outside Beautiful';
+  src: url('fonts/outside-beautiful/Outside Beautiful.woff') format('woff'),
+       url('fonts/outside-beautiful/Outside Beautiful.ttf') format('truetype'),
+       url('fonts/outside-beautiful/Outside Beautiful.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Al Biyan Demo';
+  src: url('fonts/Al\ Biyan\ Demo.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'AlMughirDemo';
+  src: url('fonts/Al\ Mughir\ Demo.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Autography';
+  src: url('static/fonts/Autography.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Happy Holiday';
+  src: url('fonts/Happy Holiday.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'AlBiyanDemo';
+  src: url('fonts/Al\ Biyan\ Demo.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Saturday Christmas';
+  src: url('fonts/Saturday Christmas.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Simple Farmhouse';
+  src: url('fonts/Simple Farmhouse.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Summer Handwriting';
+  src: url('fonts/Summer Handwriting.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+*{ 
+  box-sizing : border-box;
+  /* font-family: 'Outside Beautiful'; */
+  /* font-family: 'Autography';  */
+  /* font-family: 'AlBiyanDemo';  */
+  /* font-family: 'AlMughirDemo';  */
+  /* font-family: 'Happy Holiday';  */
+  /* font-family: 'Saturday Christmas';  */
+  /* font-family: 'Simple Farmhouse';  */
+  /* font-family: 'Summer Handwriting';  */
+  margin:0;
+  padding:0;
+}
+/* color-variable für nav und border -- Farbverlauf?*/
+/* weitere variable ggf. für farbverläufe */
+body{
   color: rgb(168, 0, 168);
   /* background-color: pink; */
-  background-color: #f7f4e1;
+  background-color: var(--center-color);
+  /* font-family:'Times New Roman', Times, serif; */
+  font-size: 1.2em;
+  position:relative;
+}
+.top-bar {
+  height: 9vh;
+  background-color: #524e26;
+  background-image: url(wood1.avif);
+  color: #ecf6ff;
+  font-size: 1.5em;
+  /* z-index: 1000; */
+  border-bottom: solid black 4px;
+  box-shadow: 10px 10px 16px 4px rgba(255, 0, 0, 0.5);
+}
+
+#timeAndDay-field {
+  font-family: 'Saturday Christmas'; 
+  text-align:center;
+  /* margin-left: 50vw; */
+  padding-top:2vh;
+  text-shadow: 3px 3px 3px black;
+}
+
+/*Rahmeneffekt mit Tiefe? -> aktuell: content mit border, darin div mit border für gewissen Tiefeeffekt - Gradient?*/
+/* evtl. engrave/emboss */
+.nav{
+  background: var(--main-gradient);
+  height:25vh;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  #clear{
+    /* background: rgba(255, 0, 0, 0.495); */
+    margin-top: 3vh;
+    margin-bottom: 4vh;
+    width:fit-content;
+    border: red 3px;
+    border-radius: 2%;
+    border-style:ridge;
+    box-shadow: 0 0 2px red;
+  }
+  #clear:hover{
+    background:rgba(255, 0, 0, 0.374);
+  }
+  #clear:active{
+    background: red;
+  }
+}
+.border{
+  /* border: #191616 ridge 4px; */
+  margin:0;
+  background: var(--main-gradient);
+  /* padding-top: .7em;
+  padding-left: .7em;
+  padding-right: .7em; */
+  /* background-image: url(warmBlueColors.jpg); */
+  /* background-size: cover; */
+  /* https://www.freepik.com/free-photo/decorative-bokeh-lights-background_6038285.htm#fromView=keyword&page=1&position=16&uuid=5469887a-2de9-47e5-b417-f5497c9757bb&query=Warm+light+blue */
+  /* box-shadow: 0 4px 24px rgba(0,0,0,0.08); */
+}
+.content{
+  /* box-shadow: inset -30px -30px 30px -10px var(--main-color), 
+              inset 30px 30px 30px -10px var(--main-color); */
+  box-shadow: inset -20px -20px 10px -20px var(--main-color-dark), 
+              inset 10px 10px 30px -10px var(--main-color-dark);
+  width: 80%;
+  max-width: 80%;
+  margin:0 auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  border: var(--main-color-dark-half) ridge 5px;
+
+  background: var(--center-color);
+  background: radial-gradient(ellipse, rgba(212, 244, 252, 1) 0%, var(--center-color) 100%);
+  /* border-image: radial-gradient(circle, var(--main-color) 10%, var(--main-color-light) 100%, var(--main-color)) 10%; */
+  /* 
+  background: #9ce9ff;
+  background: radial-gradient(circle, rgba(156, 233, 255, 1) 80%, rgba(65, 116, 130, 1) 100%);
+ */
+  /* border-left: var(--main-color) 120px solid; */
+  /* border-right: var(--main-color) 120px solid; */
+  min-height: 51vh;
+  /* border-image: var(--main-gradient); */
+}
+
+.date-selections, .create{
+  margin: 5vh 2vw 0 2vw;
+}
+.create{
+
+}
+h2{
+  font-size: 1.2em;
+  font-style: italic;
+  padding-bottom: 1vh;
+  padding-top: 1vh;
+}
+h1{
+  font-family: 'AlBiyanDemo'; 
+  text-shadow: 1px 4px 4px #1991e680;
+    /* text-shadow: 3px 5px 1px #1991e680; */
 }
 .start,
 .end{
-  width:15%;
+  width:200px;
   display:inline;
 }
 
 .day-label{
   display:inline-block;
-  width:80px;
+  width:130px;
 }
 
 .button-div{
-  display:block;
-  margin-top:4vh;
+  /* display:flex; */
+  /* margin-top:4vh; */
 }
 
 table, tr, td, th{
   border:1px;
-  border-style: solid;
+  border-style: groove;
   text-align: center;
+  border-radius: 1%;
+}
+tr:nth-child(even){
+  background-color:rgb(192, 228, 255);
+}
+tr:nth-child(odd){
+  background-color:rgb(214, 244, 255);
 }
 table{
   margin: 0 auto;
@@ -35,7 +223,7 @@ table{
 }
 
 .random-div{
-  position:relative;
+  /* position:relative; */
 }
 
 .calendar-outer{
@@ -62,7 +250,7 @@ table{
   flex-direction: column;
   padding: 10px;
   background:rgb(240, 244, 249);
-  border-radius: 10px;
+  border-radius:4px;
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 
@@ -90,6 +278,52 @@ table{
   width:40px;
   height:40px;
   box-shadow: 0 0 4px rgba(0,0,0,0.2);
+}
+
+button, input, select{
+  background-color: rgb(209, 238, 248);
+  border: rgb(193, 193, 255) 3px;
+  border-radius: 2%;
+  border-style:ridge;
+  font-size: 1em;
+  padding: 3px;
+}
+
+input, .content{
+  user-select: text;
+}
+
+#submit-btn{
+  margin-top: 1vh;
+}
+button:hover{
+  background-color: rgb(206, 229, 237);
+  cursor:pointer;
+}
+
+.delete-btn{
+  background:none;
+  cursor:pointer;
+  border:none;
+  text-wrap: nowrap;
+}
+.delete-btn:hover{
+  background:none;
+  /* border: 1px solid black; */
+  /* background-color: var(--main-color-light);
+  border-radius: 50%; */
+  /* color:black; */
+  text-shadow: 3px 0px 5px #ff5869;
+}
+.delete-btn:active{
+  border:none;
+  background:none;
+  /* border: 1px solid black; */
+}
+
+button:active, input:active{
+  background-color: rgba(159, 202, 217, 0.763);
+  border: 3px ridge rgba(0, 0, 0, 0.926);
 }
 
 .clndrbtn{
@@ -120,7 +354,10 @@ table{
 .dates {
   display: grid;
   grid-template-columns: repeat(7,1fr);
-  gap: 5px;
+  /* gap: 10px; */
+  row-gap: 10px;
+  /* column-gap: 0; */
+
 }
 
 .date{
@@ -128,11 +365,12 @@ table{
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 10px;
+  padding: 10px 20px 10px 20px;
+  margin:0;
   margin: auto;
   cursor: pointer;
   font-weight: 600;
-  border-radius: 50%;
+  border-radius: 8%;
   width: 40px;
   height: 40px;
   transition: 0.2s;
@@ -158,7 +396,7 @@ table{
   cursor:pointer;
   border:none;
   background: none;
-  background-color: none;
+  /* background-color: none; */
   width:fit-content;
   text-wrap: nowrap;
   text-align: center;
@@ -172,7 +410,8 @@ table{
 }
 #datepicker-add-btn{
   width:fit-content; 
-  height:40px;
+  height:50px;
+  font-size: .8em;
   text-overflow: hidden; 
   /* text-wrap:nowrap;  */
   text-align: center;
@@ -180,13 +419,32 @@ table{
   border-color: #2A7B9B;;
   border-color: linear-gradient(90deg,rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 221, 83, 1) 100%);
 }
+.scaleButton{
+  height:2.5vh;
+  font-size: 1rem;
+  font-weight: 600;
+}
 
+.textarea-div{
+  position: absolute;
+  bottom:5vh;
+  right:3vw;
+  /* margin-top: 5vw; */
+  background-color: rgb(255, 255, 250);
+  text-align: center;
+  background: none;
+  #textarea-label{
+    text-shadow: 2px 2px 2px #1111114d;
+  }
+  #textarea-info{
 
-
-
-
-
-
-
-
+  }
+  #textarea-info:hover{
+    text-decoration: underline;
+  }
+}
+.footer{
+ background: var(--main-gradient);
+ height:25vh; 
+}
 

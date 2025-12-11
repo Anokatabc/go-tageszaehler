@@ -325,14 +325,14 @@ func handlePost(w http.ResponseWriter, r *http.Request, params httprouter.Params
 			content.TotalTime.Minutes = totalMinutes % 60
 			content.TotalTime.Hours = totalHours + (int(totalMinutes / 60))
 		}
-
 	}
 
 	fmt.Printf("Content vor Template-Ausführung: %+v\n", content)
-	errt := templates.ExecuteTemplate(w, resultsHtml, content)
+	errt := templates.ExecuteTemplate(w, resultsHtml, content) //als Pointer
 	if errt != nil {
 		fmt.Println("\nfehler beim ausführen des templates:", errt.Error())
 		http.Error(w, "fehler beim ausführen des templates", http.StatusInternalServerError)
 	}
-
 }
+//pointer anschauen
+//funktionale programmierung structs

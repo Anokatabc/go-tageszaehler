@@ -1,88 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link type="text/css" rel="stylesheet" href="/static/style.css">
-  <script defer type="text/javascript" src="/static/main.js"></script>
-  <script defer type="text/javascript" src="/static/calendar.js"></script>
+  <link type="text/css" rel="stylesheet" href="../static/style.css">
+  <script defer type="text/javascript" src="../static/main.js"></script>
+  <script defer type="text/javascript" src="../static/calendar.js"></script>
+  <script defer type="text/javascript" src="../static/time.js"></script>
   <title>Tageszähler</title>
 </head>
+
 <body>
-  <h1>Tageszähler</h1>
-<form method="post" action="/results.html">
-  <div class="date-selections">
-    <label for="year-select">Jahr auswählen</label>
-    <select name="Monat" id="year-select"></select>
-    <label for="month-select">Monat auswählen</label>
-    <select name="Monat" id="month-select"></select>
-    <label for="day-select">Tag auswählen</label>
-    <select name="Tag" id="day-select"></select>
-    <br>
-    <label id="calendar-label" for="datepicker">Alternativ-Daten auswählen: </label>
-    <input id="datepicker" type="date">
-    <button style="margin-left:10%;" class="button" type="button" id="addWeek">Woche hinzufügen</button>
-  </div>
-  <div class="random-div"></div>
-  <div class="calendar-outer">
-    <div id="calendar" class="calendar">
-      <span id="datepicker-clear-span"><button type="button" id="datepicker-clear-btn"><u>Auswahl löschen</u></button></span>
-      <div class="header">
-        <button class="clndrbtn" type="button" id="prevBtn">
-          <i class="fa-solid fa-chevron-left">＜</i>
-        </button>
-        <div class="monthYear" id="monthYear"></div>
-        <button class="clndrbtn" type="button" id="nextBtn">
-          <i class="fa-solid fa-chevron-right">＞</i>
-        </button>
+  <form method="post" action="/results.html">
+    <div class="top-bar">
+      <p id="timeAndDay-field"></p>
+    </div>
+    <!-- <hr style="box-shadow: 3px 3px 3px black;"> -->
+    <nav class="nav">
+      <div class="date-selections">
+        <label class="dropdown" for="year-select">Jahr auswählen</label>
+        <select class="dropdown" name="Monat" id="year-select"></select>
+        <label class="dropdown" for="month-select">Monat auswählen</label>
+        <select class="dropdown" name="Monat" id="month-select"></select>
+        <label class="dropdown" for="day-select">Tag auswählen</label>
+        <select class="dropdown" name="Tag" id="day-select"></select>
+        <br>
+        <label class="create-label" id="calendar-label" for="datepicker">Alternativ-Daten auswählen: </label>
+        <input class="create" id="datepicker" type="date" autocomplete="off">
+        <button class="button create" type="button" id="addWeek" aria-readonly="true">Volle Woche hinzufügen</button>
       </div>
-      <div class="days">
-        <div class="day" value="1">Mon</div>
-        <div class="day" value="2">Tue</div>
-        <div class="day" value="3">Wed</div>
-        <div class="day" value="4">Thu</div>
-        <div class="day" value="5">Fri</div>
-        <div class="day" value="6">Sat</div>
-        <div class="day" value="0">Sun</div>
-      </div>    
-      <div class="dates" id="dates"></div>
-      <span id="datepicker-add-span"><button type="button" id="datepicker-add-btn">Tage <br>hinzufügen</button></span>
-    </div>
-    <div class="date-selection">
-      
-    </div>
-  </div>
-<!--   <span style="position:absolute;right:0px; top:15vh;">
-    <label for="paste" style="display:flex;">(Text mit Uhrzeiten hineinkopieren)</label>
-    <textarea name="paste" id="paste" cols="40" rows="5"></textarea>
-  </span> -->
-  <div class="button-div">
-    <button class="button" type="button" id="clear">Übersicht zurücksetzen</button>
-  </div>
-  <div id="days"></div>
-  <input type="submit" value="Berechne Gesamtstunden">
-  <!-- <div id="start-div"></div>
-  <div id="end-div"></div> -->
 
-  <!-- <h2>Arbeitsstunden-Berechnung</h2> -->
+      <div class="calendar-outer" id="calendar-outer">
+        <div id="calendar" class="calendar">
+          <span id="datepicker-clear-span"><button type="button" id="datepicker-clear-btn"><u>Auswahl
+                löschen</u></button></span>
+          <div class="header">
+            <button class="clndrbtn" type="button" id="prevBtn">
+              <i class="fa-solid fa-chevron-left">＜</i>
+            </button>
+            <div class="monthYear" id="monthYear"></div>
+            <button class="clndrbtn" type="button" id="nextBtn">
+              <i class="fa-solid fa-chevron-right">＞</i>
+            </button>
+          </div>
+          <div class="days">
+            <div class="day" value="1">Mon</div>
+            <div class="day" value="2">Tue</div>
+            <div class="day" value="3">Wed</div>
+            <div class="day" value="4">Thu</div>
+            <div class="day" value="5">Fri</div>
+            <div class="day" value="6">Sat</div>
+            <div class="day" value="0">Sun</div>
+          </div>
+          <div class="dates" id="dates"></div>
+          <span id="datepicker-add-span"><button type="button" id="datepicker-add-btn">Tage
+              <br>hinzufügen</button></span>
+        </div>
+      </div>
+      <button class="button" type="button" id="clear">Übersicht zurücksetzen</button>
+    </nav>
+    <div class="border">
+      <main class="content">
+        <h1>Tageszähler</h1>
+        <!-- form über mehrere Divs verteilen? -->
+        <!-- müssen Dropdowns und Kalender überhaupt innerhalb des form-divs liegen? -->
+        <!-- Dropdowns und Kalender im nav-Bereich -->
+        <!-- Formularfelder im weißen Bereich -->
+        <!-- Ggf. Buttons für Ausrechnen und Zurücksetzen im Footer? -->
 
-  <!-- <div class="days">Tag 03 - Mo</div>
-  <div class="start">
-    <label>Tag 03 - Mo</label>
-    <input type="text" class="start" placeholder="HH:MM">
+        <div id="days"></div>
+        <input id="submit-btn" type="submit" value="Berechne Gesamtstunden" style="cursor:pointer;">
+  </form>
+  <div class="textarea-div">
+    <p><label id="textarea-label" for="textarea">Copy&Paste-Feld</label></p>
+    <button type="button" id="textarea-show">show/hide</button>
+    <textarea name="asd" id="textarea" cols="25" rows="6" style="display:none; margin:0; padding:0;"></textarea>
+    <button type="button" id="textarea-btn" style="display:none;">Auswerten & einfügen</button>
+    <p><button type="button" id="textarea-info" style="background:none; border:none; color:blue; margin:0; padding:0;">?</button></p>
   </div>
-  <div class="end">
-    <input type="text" class="end" placeholder="HH:MM">
-  </div>  
-  <div class="days">Tag 04 - Di</div>
-  <div class="start">
-    <label>Tag 04 - Di</label>
-    <input type="text" class="end" placeholder="HH:MM">
+  </main>
   </div>
-  <div class="end">
-    <input type="text" class="end" placeholder="HH:MM">
-  </div>   -->
-
-</form>
+  <footer class="footer"></footer>
 </body>
+
+</html>
+
 </html>

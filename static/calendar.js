@@ -21,6 +21,8 @@ datepicker.addEventListener('click', () => {
   calendar.style.display = "flex"
 });
 
+
+
 document.addEventListener('click', (event) => {
   if (!calendar.contains(event.target) && event.target !== datepicker) {
     calendar.style.display = "none"; // Kalender ausblenden
@@ -344,7 +346,7 @@ document.getElementById('datepicker-add-btn').addEventListener('click', () => {
         fridayDate = daysInMonth;
       }
       h2.innerHTML = `Arbeitswoche vom ${mondayDate}. bis ${(fridayDate)}. ${monthList[currentMonth]}
-<button type="button" class="delete-week-btn" tabindex="-1" style="background:none; border:none; cursor:pointer;">🗑️</button>`;;
+<button type="button" class="delete-week-btn delete-btn" tabindex="-1">🗑️</button>`;;
       
       container.appendChild(h2);
     }

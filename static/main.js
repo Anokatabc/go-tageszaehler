@@ -4,8 +4,26 @@
 // let yearDropdown;
 /** @type {HTMLDivElement} */
 // let dayDropdown;
+const pasteTextarea = document.getElementById('textarea');
+const textareaBtn = document.getElementById('textarea-btn');
+document.getElementById('textarea-info').addEventListener('click', () => {
+  alert("Hier kann ein beliebig langer String eingefügt werden. Alle Uhrzeiten-Werte im Format HH:MM werden beim Einfügen der Reihe nach in bestehende Formularfelder eingefügt. \n(Dazu müssen natürlich bereits Tage/Wochen hinzugefügt worden sein).\n\nSofern das automatische Einfügen aus irgendeinem Grund nicht funktioniert hat, kann es über den Button erneut eingefügt werden. Das automatische Einfügen reagiert auf die Einfüge-Aktion, nicht einfache Eingaben.")
+});
 
 document.addEventListener('DOMContentLoaded', function(){
+
+  document.getElementById('textarea-show').addEventListener('click', () => {
+    setTimeout(textAreaShow, 50);
+  });
+
+  document.getElementById('textarea-btn').addEventListener('click', pasteTimes);
+
+  pasteTextarea.addEventListener('paste', () => {
+    pasteTimes();
+
+    setTimeout(pasteTimes, 100)
+  });
+
   console.log('Dom fertig geladen, initialisiere Dropdowns.')
   window.monthDropdown = document.getElementById('month-select');
   window.yearDropdown = document.getElementById('year-select');
@@ -110,6 +128,13 @@ function isDateValid(dateString){
 
 function setupDatepicker(event){
   event.preventDefault();
+  const position = datepicker.getBoundingClientRect();
+  const calendarDiv = document.getElementById('calendar-outer');
+  
+  calendarDiv.style.position = 'absolute';
+  calendarDiv.style.top = `${position.bottom+5}px`; //+ window.scrollY
+  // calendarDiv.style.left = `${position.left-200}px`; //+ window.scrollX
+  calendarDiv.style.left = "25%"
 }
 
 function pickDate(event){
@@ -385,8 +410,8 @@ function addWeek() {
     fridayDate.setDate(daysInMonth);
   }
   
-  h2.innerHTML = `Arbeitswoche vom ${currentWorkday}. bis ${fridayDate.getDate()}. ${monthList[currentMonth]}
-  <button type="button" class="delete-week-btn" tabindex="-1" style="background:none; border:none; cursor:pointer;">🗑️</button>`;
+  h2.innerHTML = `<span style="text-wrap: nowrap;">Arbeitswoche vom</span> <span style="text-wrap: nowrap;">${currentWorkday}. bis ${fridayDate.getDate()}. ${monthList[currentMonth]}
+  <button type="button" class="delete-week-btn delete-btn" tabindex="-1">🗑️</button></span>`;
   container.appendChild(h2);
 
   let addedDays = 0;
@@ -444,10 +469,18 @@ function addDayHTML(date){
   div.className = 'workdays'
   div.innerHTML = `
       <label class="day-label">Tag ${String(fullDate.getDate()).padStart(2, '0')}. - ${weekdays[dayOfWeek]}</label>
-      <input type="text" class="start" name="day${date}_start" placeholder="HH:MM" value="${startTimes[Math.floor(Math.random()*startTimes.length)]}">
-      <input type="text" class="end" name="day${date}_end" placeholder="HH:MM" value="${endTimes[Math.floor(Math.random()*endTimes.length)]}">
-      <button type="button" tabindex="-1" class="delete-day-btn" style="background:none; border:none; cursor:pointer;">🗑️</button>
+      <input type="text" class="start workday" name="day${date}_start" placeholder="HH:MM" >
+      <input type="text" class="end workday" name="day${date}_end" placeholder="HH:MM" >
+      <button type="button" tabindex="-1" class="delete-day-btn delete-btn">🗑️</button>
   `
+  /* zum Testen austauschen:
+  <input type="text" class="start workday" name="day${date}_start" placeholder="HH:MM" value="${startTimes[Math.floor(Math.random()*startTimes.length)]}">
+  <input type="text" class="end workday" name="day${date}_end" placeholder="HH:MM" value="${endTimes[Math.floor(Math.random()*endTimes.length)]}">
+
+  <input type="text" class="start workday" name="day${date}_start" placeholder="HH:MM" >
+      <input type="text" class="end workday" name="day${date}_end" placeholder="HH:MM" >
+  */
+
   container.appendChild(div);
 
   /** @type {HTMLDivElement} */
@@ -492,3 +525,31 @@ function calculateWorkdaysInSelectedMonth(date){
 
 //todos
 //"Tag hinzufügen" entfernen
+
+
+function pasteTimes(){
+  const timesArray = textarea.value.match(/\d{2}:\d{2}/g) || [];
+  // timesArray = ["02:40", "23:22", "12:11"];
+  const daysArray = document.querySelectorAll('.workday');
+  console.log("timesArray = ",timesArray)
+  console.log("daysArray = ",daysArray)
+
+  for (let i = 0; i < Math.min(daysArray.length, timesArray.length); i++) {
+    console.log("daysArray[i]->",daysArray[i])
+console.log("timesArray[i]->",timesArray[i])
+    daysArray[i].value = timesArray[i];
+  }
+}
+
+function textAreaShow(){
+  if (pasteTextarea.style.display == 'block'){
+    pasteTextarea.style.display = 'none'
+  } else if (pasteTextarea.style.display == 'none'){
+    pasteTextarea.style.display = 'block'
+  }
+  if (textareaBtn.style.display == 'block'){
+    textareaBtn.style.display = 'none'
+  } else if (textareaBtn.style.display == 'none'){
+    textareaBtn.style.display = 'block'
+  }
+}
