@@ -8,8 +8,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/getlantern/systray"
-
 	"embed"
 	"html/template"
 
@@ -164,19 +162,6 @@ func main() {
 	log.Fatal().Err(err).Msg("\nserver failed")
 
 	// router.GET("/", ...)
-	systray.Run(onReady, nil)
-}
-
-func onReady() {
-	systray.SetTitle("Mein Server")
-	systray.SetTooltip("Webseite ist aufrufbar unter http://localhost:3000")
-	mQuit := systray.AddMenuItem("Beenden", "Server beenden")
-
-	//Warte auf Klick auf "Beenden"
-	go func() {
-		<-mQuit.ClickedCh
-		systray.Quit()
-	}()
 }
 
 func handlePost(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
@@ -274,17 +259,19 @@ func handlePost(w http.ResponseWriter, r *http.Request, params httprouter.Params
 
 		mondayDate, err := utils.GetMondayOfWeek(currentDate)
 
-		for i := 0; i < 2; i++ {
+
+		
+		for i:=0; i<2; i++{
 
 		}
 		fridayDate := mondayDate.AddDate(0, 0, 4)
 
 		if fridayDate.Year() > year {
 			daysInMonth := utils.CreateDate(year, month+1, 0).Day() //z.B. 31
-			dateDiff := daysInMonth - mondayDate.Day()              //z.B. 3
+			dateDiff := daysInMonth - mondayDate.Day() //z.B. 3
 			fridayDate = mondayDate.AddDate(0, 0, dateDiff)
-			fmt.Println("Freitagsdatum liegt über dem aktuellen Jahr - neues Datum:", fridayDate.Local().UTC())
-		}
+			fmt.Println("Freitagsdatum liegt über dem aktuellen Jahr - neues Datum:",fridayDate.Local().UTC())
+		} 
 		if err != nil {
 			// formError += err.Error()
 			fmt.Printf("\n<<<<<<<<<<<<<<<<<<<< < < < < < < Problem bei der Kalkulation des Montags: %v", err.Error())
