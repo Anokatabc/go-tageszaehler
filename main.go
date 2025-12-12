@@ -258,7 +258,20 @@ func handlePost(w http.ResponseWriter, r *http.Request, params httprouter.Params
 		currentDate := utils.CreateDate(year, month, workdayInt)
 
 		mondayDate, err := utils.GetMondayOfWeek(currentDate)
+
+
+		
+		for i:=0; i<2; i++{
+
+		}
 		fridayDate := mondayDate.AddDate(0, 0, 4)
+
+		if fridayDate.Year() > year {
+			daysInMonth := utils.CreateDate(year, month+1, 0).Day() //z.B. 31
+			dateDiff := daysInMonth - mondayDate.Day() //z.B. 3
+			fridayDate = mondayDate.AddDate(0, 0, dateDiff)
+			fmt.Println("Freitagsdatum liegt über dem aktuellen Jahr - neues Datum:",fridayDate.Local().UTC())
+		} 
 		if err != nil {
 			// formError += err.Error()
 			fmt.Printf("\n<<<<<<<<<<<<<<<<<<<< < < < < < < Problem bei der Kalkulation des Montags: %v", err.Error())
@@ -331,15 +344,18 @@ func handlePost(w http.ResponseWriter, r *http.Request, params httprouter.Params
 			startTime, endTime, weekdayNames[int(currentDate.Weekday())], workdayDateString, formError, monday, friday, hours, minutes, weekNumber, weekHours, weekMinutes)
 		fmt.Printf("\nAktuelle Länge von content.WorkTimes: %d\n", len(content.WorkTimes))
 
-		totalMinutes += minutes % 60
-		totalHours += hours + int(minutes/60)
+		//testfix
+		//totalMinutes += minutes % 60
+		//totalHours += hours + int(minutes/60)
+		totalMinutes += minutes
+		totalHours += hours
 
 		if debug {
 			fmt.Printf("---------end-of-loop----------\n %v. Tag hinzugefügt: Datum=%v\n--------------", index+1, workdayInt)
 		}
 
 		if index == len(sortedKeys)-1 {
-			fmt.Println("\n-----------exiting loop----------")
+			fmt.Printf("\n-----------iteration completed - exiting loop. Hours: %v, Minutes: %v----------", totalHours, totalMinutes)
 			content.TotalTime.Minutes = totalMinutes % 60
 			content.TotalTime.Hours = totalHours + (int(totalMinutes / 60))
 		}
@@ -352,5 +368,6 @@ func handlePost(w http.ResponseWriter, r *http.Request, params httprouter.Params
 		http.Error(w, "fehler beim ausführen des templates", http.StatusInternalServerError)
 	}
 }
+
 //pointer anschauen
 //funktionale programmierung structs

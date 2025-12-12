@@ -48,11 +48,13 @@ func GetMondayOfWeek(date time.Time) (time.Time, error) {
 	return mondayDate, nil
 }
 
-// Funktion erhält Integer für Jahr, Monat und Tag und erstellt ein Date-Objekt vgl. Javascript
+//Funktion erhält Integer für Jahr, Monat und Tag und erstellt ein Date-Objekt vgl. Javascript
+//	Ungleich Javascript werden Monate 1-12 erwartet.
+//	Bei Monat 13 wird automatisch aufs nächste Jahr gerechnet
 func CreateDate(year, month, day int) time.Time {
 	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
 	if date.Year() != year || int(date.Month()) != month || date.Day() != day {
-		panic(fmt.Sprintf("\n\nUngültiges Datum: Jahr=%v, Monat=%v/%v, Tag=%v\n\n", year, month, time.Month(month), day))
+		fmt.Sprintf("\n\nUngültiges Datum: Jahr=%v, Monat=%v/%v, Tag=%v\n\n", year, month, time.Month(month), day)
 	}
 	return date
 }
