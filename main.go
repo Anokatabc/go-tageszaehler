@@ -26,6 +26,7 @@ var embeddedFS embed.FS
 
 const indexHtml = "index.html"
 const resultsHtml = "results.html"
+const howtoHtml = "howto.html"
 
 // irgendwann nicht mehr global deklarieren
 var templates = template.Must(template.ParseFS(embeddedFS, "templates/*.html"))
@@ -103,9 +104,26 @@ func main() {
 
 	//router.GET("/index.html", )
 	//router.GET("/results.html", )
+	//router.GET("/howto.html", )
+	router.GET("/index.html", func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+
+		err := templates.ExecuteTemplate(w, indexHtml, nil)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	})
 	router.GET("/", func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 
 		err := templates.ExecuteTemplate(w, indexHtml, nil)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	})
+	router.GET("/howto.html", func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+
+		err := templates.ExecuteTemplate(w, howtoHtml, nil)
 
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)

@@ -1,3 +1,5 @@
+/* automatisch beim (manuellen) Ausfüllen der Textfelder ins nächste springen */
+
 :root{
   --main-gradient: radial-gradient(circle, rgba(156, 233, 255, 1) 0%, rgba(197, 239, 250, 1) 100%);
   --main-color: #9ce9ff;
@@ -76,11 +78,13 @@
   /* font-family: 'Summer Handwriting';  */
   margin:0;
   padding:0;
+  
+  
 }
 /* color-variable für nav und border -- Farbverlauf?*/
 /* weitere variable ggf. für farbverläufe */
 body{
-  color: rgb(168, 0, 168);
+  color: rgb(21, 15, 39);
   /* background-color: pink; */
   background-color: var(--center-color);
   /* font-family:'Times New Roman', Times, serif; */
@@ -88,11 +92,12 @@ body{
   position:relative;
 }
 .top-bar {
-  height: 9vh;
+  height: 15vh;
   background-color: #524e26;
   background-image: url(wood1.avif);
-  color: #ecf6ff;
-  font-size: 1.5em;
+  color: #fffcee;
+  font-size: 2em;
+  font-weight: 800;
   /* z-index: 1000; */
   border-bottom: solid black 4px;
   box-shadow: 10px 10px 16px 4px rgba(255, 0, 0, 0.5);
@@ -102,15 +107,20 @@ body{
   font-family: 'Saturday Christmas'; 
   text-align:center;
   /* margin-left: 50vw; */
-  padding-top:2vh;
-  text-shadow: 3px 3px 3px black;
+  padding-top:4vh;
+  /* text-shadow: 3px 3px 3px black; */
+
+  /* color: #f0f0f0; */
+  /* background-color: #666666; */
+  /* text-shadow: 1px 4px 4px #555; */
+  /* -webkit-background-clip: text; */
 }
 
 /*Rahmeneffekt mit Tiefe? -> aktuell: content mit border, darin div mit border für gewissen Tiefeeffekt - Gradient?*/
 /* evtl. engrave/emboss */
 .nav{
   background: var(--main-gradient);
-  height:25vh;
+  height:35vh;
   display:flex;
   justify-content: center;
   align-items: center;
@@ -118,12 +128,11 @@ body{
   #clear{
     /* background: rgba(255, 0, 0, 0.495); */
     margin-top: 3vh;
-    margin-bottom: 4vh;
     width:fit-content;
-    border: red 3px;
-    border-radius: 2%;
+    /* border: red 1px; */
+    border-radius: 5%;
     border-style:ridge;
-    box-shadow: 0 0 2px red;
+    /* box-shadow: 0 0 1px 1px red; */
   }
   #clear:hover{
     background:rgba(255, 0, 0, 0.374);
@@ -170,14 +179,17 @@ body{
   /* border-right: var(--main-color) 120px solid; */
   min-height: 51vh;
   /* border-image: var(--main-gradient); */
+  #days{
+    width:max-content;
+  }
 }
 
 .date-selections, .create{
   margin: 5vh 2vw 0 2vw;
 }
-.create{
+/* .create{
 
-}
+} */
 h2{
   font-size: 1.2em;
   font-style: italic;
@@ -200,10 +212,9 @@ h1{
   width:130px;
 }
 
-.button-div{
-  /* display:flex; */
-  /* margin-top:4vh; */
-}
+/* .button-div{
+
+} */
 
 table, tr, td, th{
   border:1px;
@@ -221,10 +232,14 @@ table{
   margin: 0 auto;
   width:80%;
 }
-
-.random-div{
-  /* position:relative; */
+.back{
+  padding: 5vh 5vw;
+  /* margin-top: 10vh; */
+  font-size: 1.2em;
 }
+
+/* .random-div{
+} */
 
 .calendar-outer{
   /* min-height: 100vh; */
@@ -420,25 +435,25 @@ button:active, input:active{
   border-color: linear-gradient(90deg,rgba(42, 123, 155, 1) 0%, rgba(87, 199, 133, 1) 50%, rgba(237, 221, 83, 1) 100%);
 }
 .scaleButton{
-  height:2.5vh;
+  height:fit-content;
   font-size: 1rem;
   font-weight: 600;
 }
 
 .textarea-div{
   position: absolute;
-  bottom:5vh;
+  bottom:10vh;
   right:3vw;
   /* margin-top: 5vw; */
-  background-color: rgb(255, 255, 250);
+  background-color: #fffffa;
   text-align: center;
   background: none;
   #textarea-label{
     text-shadow: 2px 2px 2px #1111114d;
   }
-  #textarea-info{
+  /* #textarea-info{
 
-  }
+  } */
   #textarea-info:hover{
     text-decoration: underline;
   }
@@ -448,3 +463,164 @@ button:active, input:active{
  height:25vh; 
 }
 
+#howto{
+  position:absolute;
+  bottom:15vh;
+  left: 3vh;
+  font-size: 1.5em;
+  a{
+    color: #150f27;
+}
+a:hover{
+  color:#6a4cc3;
+}
+
+@media (max-width: 1000px){
+  .scaleButton{
+    font-size: .8rem;
+  }
+  .button, label, .dropdown{
+    font-size: .8rem;
+    /* height: fit-content; */
+  }
+ /* .start, .end{
+ } */
+ /* .day-label{
+ } */
+   h2{
+      font-size: 2em;
+    } 
+    h1{
+      font-size: 3.5em;
+    }
+  .content{
+  font-size: .8rem;
+ }
+     .textarea-div{
+      bottom:5vh;
+    }
+}
+  @media (max-width: 800px){
+    .scaleButton{
+      font-size: .6rem;
+    }
+    .button, label, .dropdown{
+      font-size: .8rem;
+    }
+    .content{
+      font-size: .6rem;
+    }
+    .start, .end{
+      width:100px;
+    }
+    .day-label{
+      width:120px;
+      font-size: 1rem;
+    }
+   h2{
+      font-size: 2em;
+    } 
+    h1{
+      font-size: 3.5em;
+    }
+  }
+  @media (max-width: 600px){
+    .button, label, .dropdown, #clear{
+      font-size: .5rem;
+      margin:0;
+    }
+    .content{
+      font-size: .5rem;
+    }
+    .start, .end{
+      width:80px;
+    }
+    .day-label{
+      width:120px;
+      font-size: 1rem;
+    }
+   h2{
+      font-size: 2em;
+    } 
+    h1{
+      font-size: 3.5em;
+    }
+    .textarea-div{
+      bottom:3vh;
+    }
+  }
+  @media (max-width: 500px){
+    .button, label, .dropdown{
+      font-size: .8rem;
+    }
+    .nav{
+      font-size: .7rem;
+    }
+    .content{
+      font-size: .4rem;
+    }
+    .start, .end{
+      width:80px;
+    }
+    .day-label{
+      width:120px;
+      font-size: 1rem;
+    }
+   h2{
+      font-size: 2em;
+    } 
+    h1{
+      font-size: 3.5em;
+    }
+  }
+  @media (max-width: 450px){
+    .button, label, .dropdown, #clear{
+      font-size: .7rem;
+    }
+    .content{
+      font-size: .3rem;
+    }
+    .start, .end{
+      width:80px;
+    }
+    .day-label{
+      width:120px;
+      font-size: .7rem;
+    }
+    h2{
+      font-size: 2em;
+    } 
+    h1{
+      font-size: 3.5em;
+    }
+  }
+  @media (max-width: 400px){
+    .button, label, .dropdown, #clear{
+      font-size: .7rem;
+      margin:0;
+    }
+    .start, .end{
+      width:80px;
+    }
+    .day-label{
+      width:80px;
+      font-size: .7rem;
+    }
+    h2{
+      font-size: 1.5em;
+    } 
+    h1{
+      font-size: 2.5em;
+    }
+  }
+ /* table, tr, td, th{
+  border:1px;
+  border-style: groove;
+  text-align: center;
+  border-radius: 1%;
+}
+table{
+  margin: 0 auto;
+  width:80%;
+} */
+}

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Howto</title>
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      /* box-sizing: content-box; */
+    }
+    @font-face {
+      font-family: 'Saturday Christmas';
+      src: url('../static/fonts/Saturday Christmas.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    body{
+      /* overflow:hidden; */
+      background: radial-gradient(circle, #9ce9ff 0%, #c5effa 100%);
+      height:175vh;
+    }
+    .top-bar{
+      font-family: 'Saturday Christmas';
+
+      height: 15vh;
+      background-color: #524e26;
+      background-image: url(../static/wood1.avif);
+      color: #fffcee;
+      font-size: 1.5em;
+      /* z-index: 1000; */
+      border-bottom: solid black 4px;
+      /* box-shadow: 10px 10px 16px 4px rgba(255, 0, 0, 0.5); */
+      /* display:flex; */
+      /* align-items: center; */
+      text-align: center;
+      /* align-content: center; */
+      .headline{
+        padding-top: 4vh;
+      }
+    }
+    h2{
+      text-align: center;
+      align-self: center;
+      /* margin-top: 4vh; */
+      /* margin-bottom: 6vh; */
+      font-size: 2em;
+    }
+    .introduction{
+      /* padding-bottom: 4vh; */
+      padding-top: 2vh;
+      width:35vw;
+      /* height:10vh; */
+    }
+    p{
+      font-size: 1em;
+    }
+    .content{
+      position:relative;
+      /* width:100vw; */
+      /* height:175vh; */
+      /* max-height: 275vh; */
+      /* height:fit-content; */
+      
+      /* border: blue 1px solid; */
+      .back-link{
+        position:absolute;
+        top:-20px;
+        left:15px;
+        font-size: 1.5em;
+      }
+    }
+    .explanations{
+      display:flex;
+      /* border: red 1px solid; */
+      /* padding: 3em; */
+      /* align-items: center; */
+      justify-content: center;
+    }
+    .text, .screenshot{
+      height:40vh;
+      width:35vw;
+      margin:0 2vw;
+      margin-top: 5vh;
+      /* margin-top: 5vw; */
+      /* margin-bottom: 5vw; */
+    }
+    .screenshot{
+      padding: .79rem;
+      min-width: 31.82vw;
+      width:fit-content;
+      
+    }
+    .teaser{
+      /* border: #9ce9ff 5px groove; */
+      padding: .5rem;
+      background-image: url(../static/Teaser.png);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center center;
+      height: 27vh;
+      width: 25vw;
+      margin:0 auto;
+      margin-top: 5vh;
+      /* box-shadow: inset 0 0 5px 2px #73acbc;  */
+    }
+    .text{
+      border: #9ce9ff 5px groove;
+      padding: .5rem;
+      background: #9ce9ff;
+    }
+    .left{
+      align-self: baseline;
+    }
+    .right{
+      align-self: end;
+    }
+    .side{
+      width:40%;
+      height:60vh;
+    }
+    .eingabeseite{
+      background-image: url(../static/Eingabeseite.jpg);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center center;
+      /* border: #9ce9ff 5px groove; */
+      
+    }
+    .eingabeseite-zwei{
+      background-image: url(../static/Eingabeseite-zwei.jpg);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center center;
+      /* border: #9ce9ff 5px groove; */
+    }
+    .ausgabeseite{
+      background-image: url(../static/Ausgabeseite.jpg);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center center;
+      /* border: #9ce9ff 5px groove; */
+    }
+    @media (min-width: 2001px){
+      .side, .text, .introduction, .screenshot{
+        height: 16vh;
+        margin: 5vh 0;
+      }
+      .teaser{height: 20vh;}
+    }
+    @media (max-width: 2000px){
+      .side, .text, .introduction, .screenshot{
+        height: 18vh;
+        margin: 5vh 0;
+      }
+      .text, .introduction{
+        font-size: 1em;
+      }
+      .teaser{height: 20vh;}
+    }
+    @media (max-width: 1600px){
+    .teaser{height: 16vh;}
+      body{
+        font-size: .8em;
+      }
+      .side, .text, .introduction, .screenshot{
+        height:21vh;
+        margin-bottom: 5vh;
+        font-size: 1.08em;
+      }
+    }
+    @media (max-width: 1200px){
+    .teaser{height: 12vh;}
+      body{
+        font-size: .7em;
+      }
+      .side, .text, .introduction, .screenshot{
+        /* width:30%; */
+        /* height:40vh; */
+        height:13vh;
+        margin-bottom: 5vh;
+        font-size:1em;
+      }
+      .eingabeseite, .ausgabeseite{
+        background-size:contain;
+        background-repeat: no-repeat;
+        background-position: 50%;
+        /* background-color: radial-gradient(circle, rgb(225, 0, 255) 50%, rgb(204, 0, 255) 10%); */
+      }
+      @media (max-width: 1000px){
+    .teaser{height: 10vh;}
+      body{
+        font-size: .7em;
+      }
+      .side, .text, .introduction, .screenshot{
+        height:17vh;
+      }
+      }
+      @media (max-width: 800px){
+    .teaser{height: 10vh;}
+        body{
+          font-size: .6em;
+        }
+        .side, .text, .introduction, .screenshot{
+          height:14vh;
+        }
+      }
+      @media (max-width: 725px){
+    .teaser{height: 8vh;}
+        body{
+          font-size: .6em;
+        }
+        .side, .text, .introduction, .screenshot{
+          height:15vh;
+        }
+      }
+      @media (max-width: 650px){
+    .teaser{height: 6vh;}
+        body{
+          font-size: .6em;
+        }
+        .side, .text, .introduction, .screenshot{
+          height:17vh;
+        }
+      }
+      @media (max-width: 575px){
+    .teaser{height: 7vh;}
+        body{
+          font-size: .6em;
+        }
+        .side, .text, .introduction, .screenshot{
+          height:19vh;
+        }
+      }
+      @media (max-width: 525px){
+    .teaser{height: 7vh;}
+        body{
+          font-size: .5em;
+        }
+        .side, .text, .introduction, .screenshot{
+          height:15vh;
+        }
+      }
+    }
+    .footer{
+      height: 25vh;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <h2 class="headline">Benutzerhinweise</h2>
+  </div>
+  <main class="content">
+    <a href="index.html" class="back-link">Zurück zur Hauptseite</a>
+    <div class="teaser"><img src="" id="teaser" alt=""></div>
+    <div class="introduction" style="text-align: left; margin:0 auto;">
+      <p style="margin-top: 3vh;" class="text">Herzlich willkommen! Hier findest du eine kleine Erklärung zur <b>Bedienungsweise</b> dieser Webseite. 
+        Sie war ein Übungsprojekt für mich, um das Zusammenspiel zwischen Websprachen und <b>Go</b> praktisch zu erproben.
+        <br><b>Go</b> regelt das Backend und stellt zugleich einen lokalen Webserver bereit, um diese Seite aufzurufen (Localhost:3000). 
+        <br><b>HTML</b> bildet das Skelett, auf dem <b>Javascript</b> dynamische Elemente aufbaut. <b>CSS</b> zuletzt regelt Styling. 
+        <br><br>
+        Unten findest du einige Darstellungen mit entsprechenden Erklärungen seitlich daneben aufgeführt.
+      </p>
+    </div>
+    <div class="explanations">
+      <div class="left side">
+        <div class="screenshot eingabeseite"></div>
+        <hr>
+        <p class="text">
+          Das <b>Formular</b> erwartet Einträge im Format <b>HH:MM</b> (Stunden:Minuten). <br>Bei dem <b>manuellen</b> Eintragen der Uhrzeiten 
+          wird nach Eingabe von 4 Ziffern automatisch ein Doppelpunkt in der Mitte gesetzt und automatisch ins nächste Feld gesprungen.
+          <br><br>
+          Für Nutzer, die selbst bereits über eine digitalisierte Stundenliste verfügen, gibt es außerdem die Möglichkeit, unten rechts
+          ein <b>Textfeld</b> zu öffnen. Indem der Text dort hineinkopiert wird, werden die Stunden automatisch in verfügbare Felder übertragen.
+        </p>
+        <hr>
+        <div class="screenshot ausgabeseite"><img src="" alt=""></div>
+      </div>
+      <div class="right side">
+        <p class="text">
+          Zunächst einmal zum Gesamtüberblick: Diese Seite dient der komfortablen <b>Aufrechnung von Arbeitsstunden</b>. 
+          Zur Zeit ist dies auf Arbeitstage innerhalb eines Jahres und innerhalb eines Monats beschränkt. <br>
+          Mittels der Buttons am oberen Ende der Seite lassen sich die Daten / Tage auswählen, die man dem Formular hinzufügen
+          möchte. <b>Woche hinzufügen</b> fügt immer die <b>gesamte</b> Arbeitswoche des ausgewählten Datums hinzu, beginnend ab 
+          <b>Montag</b>.
+          <br><br>
+          Mit dem <b>Kalender</b> lassen sich einzelne Tage oder auch mehrere Tage (<i>Tipp: Klick&Drag</i>) hinzufügen.
+      </p>
+      <hr>
+        <div class="screenshot eingabeseite-zwei"></div>
+        <hr>
+        <p class="text">
+          Zur <b>Ausgabeseite</b>: <br><br>
+          Alle Einträge werden <b>wochenweise</b> ausgewertet und aufgeführt. Auf fehlerhafte Einträge wird hingewiesen. 
+          <br> <br>
+          Unter jeder Woche werden die aufsummierten Wochenstunden und ganz am Ende die Monatsstunden aufgeführt.
+          <br><br>
+          - Wochen werden <b>chronologisch</b> aufgelistet, egal in welcher Reihenfolge sie auf der vorherigen Seite hinzugefügt wurden.
+        </p>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

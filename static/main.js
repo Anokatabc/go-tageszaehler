@@ -5,24 +5,10 @@
 /** @type {HTMLDivElement} */
 // let dayDropdown;
 const pasteTextarea = document.getElementById('textarea');
-const textareaBtn = document.getElementById('textarea-btn');
-document.getElementById('textarea-info').addEventListener('click', () => {
-  alert("Hier kann ein beliebig langer String eingefügt werden. Alle Uhrzeiten-Werte im Format HH:MM werden beim Einfügen der Reihe nach in bestehende Formularfelder eingefügt. \n(Dazu müssen natürlich bereits Tage/Wochen hinzugefügt worden sein).\n\nSofern das automatische Einfügen aus irgendeinem Grund nicht funktioniert hat, kann es über den Button erneut eingefügt werden. Das automatische Einfügen reagiert auf die Einfüge-Aktion, nicht einfache Eingaben.")
-});
 
 document.addEventListener('DOMContentLoaded', function(){
 
-  document.getElementById('textarea-show').addEventListener('click', () => {
-    setTimeout(textAreaShow, 50);
-  });
 
-  document.getElementById('textarea-btn').addEventListener('click', pasteTimes);
-
-  pasteTextarea.addEventListener('paste', () => {
-    pasteTimes();
-
-    setTimeout(pasteTimes, 100)
-  });
 
   console.log('Dom fertig geladen, initialisiere Dropdowns.')
   window.monthDropdown = document.getElementById('month-select');
@@ -487,10 +473,11 @@ function addDayHTML(date){
   const startInput = div.querySelector(".start");
   /** @type {HTMLDivElement} */
   const endInput = div.querySelector(".end");
-  setupFormatting(startInput);
-  setupFormatting(endInput);
+  setupFormatting(startInput); //Textinhalt Form-links
+  setupFormatting(endInput); //Textinhalt Form-recht
 }
 
+//
 function setupFormatting(input){
   input.addEventListener('input', function() {
     console.log("input",input);
@@ -499,8 +486,52 @@ function setupFormatting(input){
       console.log("yes");
       // content.replace(/[^0-9]/g, '');
       input.value = content.slice(0, 2) + ":" + content.slice(2);
+      
+      console.log("input.name =",input.name)
+      tabNextFormField(input);
     } else return;
   });
+}
+
+function tabNextFormField(input){
+
+  const isStart = input.name.endsWith('start');
+  const isEnd = input.name.endsWith('end');
+
+  const match = input.name.match(/\d+/); //z.B. 15
+  if (!match) return;
+
+  let date = Number(match[0]);
+  let nextInput = null;
+
+  if (isStart) {
+    console.log("isStart")
+    nextInput = document.querySelector(`input[name="day${date}_end"]`);
+  } else if (isEnd) {
+    console.log("isEnd")
+    nextInput = document.querySelector(`input[name="day${date+1}_start"]`);
+  } else {
+    return;
+  }
+
+  if (!nextInput){
+    console.log("nextInput =",nextInput)
+    for (let i=1; date+i<31; i++){
+      console.log("entering loop")
+      nextInput = document.querySelector(`input[name="day${date+i}_start"]`);
+      if (nextInput){
+        console.log("nextInput found:", nextInput);
+        break;
+      } 
+      if (date+i>=30){console.log("close to 31 end condition")}
+    }
+  }
+
+  if (nextInput) {
+    nextInput.focus();
+  } else {
+    console.error("kein nächstes Element gefunden!")
+  }
 }
 
 function calculateDaysInSelectedMonth(month){
@@ -523,33 +554,4 @@ function calculateWorkdaysInSelectedMonth(date){
   return totalWorkdays
 }
 
-//todos
-//"Tag hinzufügen" entfernen
-
-
-function pasteTimes(){
-  const timesArray = textarea.value.match(/\d{2}:\d{2}/g) || [];
-  // timesArray = ["02:40", "23:22", "12:11"];
-  const daysArray = document.querySelectorAll('.workday');
-  console.log("timesArray = ",timesArray)
-  console.log("daysArray = ",daysArray)
-
-  for (let i = 0; i < Math.min(daysArray.length, timesArray.length); i++) {
-    console.log("daysArray[i]->",daysArray[i])
-console.log("timesArray[i]->",timesArray[i])
-    daysArray[i].value = timesArray[i];
-  }
-}
-
-function textAreaShow(){
-  if (pasteTextarea.style.display == 'block'){
-    pasteTextarea.style.display = 'none'
-  } else if (pasteTextarea.style.display == 'none'){
-    pasteTextarea.style.display = 'block'
-  }
-  if (textareaBtn.style.display == 'block'){
-    textareaBtn.style.display = 'none'
-  } else if (textareaBtn.style.display == 'none'){
-    textareaBtn.style.display = 'block'
-  }
-}
+//todo: HTML-spezifische Funktionen auslagern, Fehler minimieren, 

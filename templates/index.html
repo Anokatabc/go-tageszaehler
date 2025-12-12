@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link type="text/css" rel="stylesheet" href="../static/style.css">
   <script defer type="text/javascript" src="../static/main.js"></script>
+  <script defer type="text/javascript" src="../static/textarea.js"></script>
   <script defer type="text/javascript" src="../static/calendar.js"></script>
   <script defer type="text/javascript" src="../static/time.js"></script>
   <title>Tageszähler</title>
@@ -13,9 +14,9 @@
 
 <body>
   <form method="post" action="/results.html">
-    <div class="top-bar">
-      <p id="timeAndDay-field"></p>
-    </div>
+<div class="top-bar">
+  <p id="timeAndDay-field"></p>
+</div>
     <!-- <hr style="box-shadow: 3px 3px 3px black;"> -->
     <nav class="nav">
       <div class="date-selections">
@@ -26,7 +27,7 @@
         <label class="dropdown" for="day-select">Tag auswählen</label>
         <select class="dropdown" name="Tag" id="day-select"></select>
         <br>
-        <label class="create-label" id="calendar-label" for="datepicker">Alternativ-Daten auswählen: </label>
+        <label class="create-label" id="calendar-label" for="datepicker">Daten auswählen: </label>
         <input class="create" id="datepicker" type="date" autocomplete="off">
         <button class="button create" type="button" id="addWeek" aria-readonly="true">Volle Woche hinzufügen</button>
       </div>
@@ -72,16 +73,21 @@
         <div id="days"></div>
         <input id="submit-btn" type="submit" value="Berechne Gesamtstunden" style="cursor:pointer;">
   </form>
+
+</main>
+</div>
+<footer class="footer">
+  <div id="howto"><a href="howto.html"><button type="button" style="height:fit-content; width:fit-content">?</button>Benutzerhilfe</a></div>
   <div class="textarea-div">
     <p><label id="textarea-label" for="textarea">Copy&Paste-Feld</label></p>
     <button type="button" id="textarea-show">show/hide</button>
     <textarea name="asd" id="textarea" cols="25" rows="6" style="display:none; margin:0; padding:0;"></textarea>
     <button type="button" id="textarea-btn" style="display:none;">Auswerten & einfügen</button>
-    <p><button type="button" id="textarea-info" style="background:none; border:none; color:blue; margin:0; padding:0;">?</button></p>
+    <p><button type="button" id="textarea-info" style="height:fit-content; width:fit-content; color:blue; margin:0; padding:0;">?</button></p>
   </div>
-  </main>
-  </div>
-  <footer class="footer"></footer>
+
+    
+  </footer>
 </body>
 
 </html>
